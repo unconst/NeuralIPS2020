@@ -1,0 +1,146 @@
+
+
+
+\documentclass{article}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{caption}
+
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{tikz}
+\usepackage{bbm}
+\usepackage{todonotes}
+\usepackage{siunitx}
+\graphicspath{ {.} }
+
+\newtheorem{theorem}{Theorem}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=Java,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
+\begin{document}
+
+
+\section{Introduction}
+
+Intelligence systems which produce conceptual representations of inputs have become the backbone of nearly every state-of-the-art technique in machine intelligence.
+
+(1) https://d4mucfpksywv.cloudfront.net/better-language-models/language_models_are_unsupervised_multitask_learners.pdf
+(1) Noisy student: https://arxiv.org/pdf/1911.04252v2.pdf
+(2) Megatron: https://arxiv.org/pdf/1909.08053v3.pdf
+
+However, the method used to evaluate and reward the production of this form of intelligence still relies on using supervised benchmarks which evaluate tasks, rather than representational understanding directly. 
+
+(1) Imagenet http://www.image-net.org/papers/imagenet_cvpr09.pdf
+(2) SuperGLUE https://w4ngatang.github.io/static/papers/superglue.pdf
+
+The miss-alignment between the salient feature being improved and the mechanism being used to evaluate it suffers for various reasons. 
+
+For one, supervised tasks lose the full conceptual knowledge learned by the model, Hinton's dark knowledge, when they collapse it onto the smaller logit space described by the task.
+
+(1) Distillation https://arxiv.org/abs/1503.02531
+
+Progress on the smaller task specific region can be bought with additional data, without necessarily improving understanding.
+
+(1) Francis Chollet: https://arxiv.org/abs/1911.01547
+
+Models which improve understanding of regions disjoint from these tasks, those which cover the generalized space better, or old models which previously pushed the state of the art are not thrown out by the without a way of measuring their unique contribution.
+
+There is no measure of value between method, and the large community of researchers 
+world wide are in essence pitted against each other. 
+
+In the end, the winners are naturally those who have the means to train the largest models.
+
+(1) https://arxiv.org/abs/2002.04013
+
+
+The aim in this paper is to show how a collective of intelligence systems could be used to evaluate the distributional contribution of their peers rather than projecting that infomation down onto labelled datasets. In this system it is possible to measure the contribution of each peer in informational-theoretic significance: models which previously performed well, or those that push new small disjoint region in the representational space, can be rewarded.  Models understanding can be added to the network and be used by the others, the system does not waste that which has been learned before. And, by constructing the system to run across the internet, p2p, any number of supervsied or unsupervised tasks can be added concurrently. This provides a basis for drastically increasing the number of tasks the network works towards concurrently, potentially freaching the ‘G’ factor at the generalized intersection of the participants. 
+
+
+Progress in machine intelligence has primarily been measured by benchmarks composed of a one or more supervised tasks defined by a dataset. As the field advances however, more attention has been given to training machine learning models which produce general, multitask representations of inputs, projections from an image or a sequence of text into a higher dimensional space where the features are disentangled, causal, and easily display the semantics of the underlying data. 
+
+and these forms of representation are trained to be useful to a set of tasks much large than the narrow number that define the benchmark. 
+
+As the field moves towards this new paradigm, away from task-specific skill and towards information generation as a core task, the use of benchmarks becomes increasingly imprescie mectric against which to evaluate models. For one, the number of relevant tasks far exceeds those defined in modern test beds, and the aim is beomces improving the representations rather than imporving accuracy on supervised tasks. For instance, the distributional knowledge of the representations learned (hintons dark knowledge) is not measured by the benchmark. 
+
+This imprecions, misses models which produce understanding which niche and un covered by the datasets, or those models which cover the generalized space well but under perform on the specific. 
+
+In this paper we propose a method which can be used to measure this distributional contribution in information theoretic terms. This is possible because the benchmarks is composed of a set of interconnected learners who continually produce scores for their peers by learning to prune them. This way, new models must learn to be useful to their peers as their peers train over a specific self-supervsied task. More over, as the network is inherently collaborative and continual, the benchmark hardens as new participants must find niche vaue within the domain. 
+
+The contributions in this paper are thus multiple, since the requirement for a working system includes a method of training a decentralized neural network architecture. In this paper we briefly cover how this is achieved and defer to secondary peices of research which show how the framework for such and architecture is possible. 
+
+The major thrust in this work is solving the inherent issues which arise when building p2p systems. Incentive compatibility is required such that we can know how the system behaves when actors act in their self-interest. The solution in this paper is to characterize the individual computers using assumptions about their payoff and then empricially extract relationships between an idealized ranking and the one found in a coordinated setting. 
+
+\section{Method}
+
+We define our benchmark to run over $n$ parameterized functions N, where each function is a machine learning model producing a representation over an example by first gathering the outputs of the network and using them as input to itself. Each function is training continually, over a dataset, given an error function such that in expectation we have loss. We make the aschetic assumption that these losses are scaled to 0,1 and we write the network objective B.
+
+The aim of this work is to produce a ranking over these functions where the ranking score r in R represents each participants information theoretic significnace to the network as a whole. Following le cunn and others, this can reasonably defined by taking a Taylor series of the loss at a fixed point, wirth respect ot a pertubation which reflects the removal of each node from the network.  
+
+
+Where here, the hessian term is show as (). Note that the other terms in the Taylor series have been removed at the local minimum and when the error function Q is the cross entropy, H the fishers information of our inputs. Intuitively, the measure reflects the cost of removal from the network where cost is measured in the KL divergence change between the distribution over the inputs and the one here. 
+
+Without perfect knowledge however, the score above canont be computed. Instead, our aim is to compute B by aggregating scores from the participants in the network where each participant computes the inner score. W-I and the results are averaged. We use a digital legeer to store these values, and have the components update them over time, using a gradient step. We then compute the following score can be computed in matrix form: 
+
+
+The problem with the supposed formulation is that it is not resistednt to manipulation, we cannot be sure that the comptuers in the network will honestly or competently compute the them and we can therefor not be sure that the resulting score reflect in anyway the actual scores desired. The remainder of this parper is dedicated to resolving this issue.
+
+
+Our solution begins by introducing incentive into the system int he form of a finite resource S. The resource is released periodiccall and goes to computers with larger ranking. The significnace of S is two fold. (!) it protects the system from sybill attacks, where a computer cannot createa . large number of spuriosu nodes to game the system and (2) forms and incentive allowing sucht hat computers with hgih stake must have worked to attain it or indirectly subzsidized thos that have.
+
+Secondly, we introduce a differnentiabl allocation mechanism over the network whcih works by masking the outpus of the nodes using a sighfted signmoid. 
+
+The purpose of this allocation mechanism is to penalize under weighting neighbors in the network. Underbidding has your inputs masked to zero subsequenctly effecting your loss function. 
+
+Analysis and experiments:
+
+Without access to a fully running p2p network, we cannot directly evalute the performance of the system. INstead, our attempt to model the system and participants under reasonable assumptions and then sample statistics from the dynamics. 
+
+Our model begins with a common payoff model from gametheory where each participant can be assumed self-interested and attempting to maximize their utility attached to their loss function, and the utility attained during emmission. 
+
+Without loss of generality these are measureed in similar units, and the game is sequential, where at each step the participants are selecting a new set of weights delta for their row as to maximize their payoff and recieving the corresponding emsission of tokens.
+
+To derive the liekly behaviour of participants we show in the appendix that selecting the gradient of the loss w.r.t the payoff is a zero-regret strategy at each step: i.e. at least as good as any other strategy in hindsight. And these steps can be derived by taking the derivateive of the emission function and the derivateive of the loss respectively. 
+
+We model the system near a local minimum in the loss. At this point, the linear gradient terms can be safely removed from the model and what is left is the hessian of the loss w.r.t the weights. 
+
+Finally, we make the reasonable assumption that utiltiy of the loss function is lipshitze continous to derive a model which is full parameterized by the hessian and the lipshitiz terms. The remaining parameters tau, the termpetature in the sigmoid and the emmission function are tuned by us. 
+
+To sample the system dynamics for network of size n, we sample n random semi posititve definite hessians for the local minimum and we randomly intialize the weight matrix. We then traint the network to a local minimum using the regret free strategy previously explained. The resulting rankings are then compared against the idealized ranking from section. See figure 1.2.
+
+discurssion. 
+
+
+We can see from the above that the ta terms effect cs fsd]sf
+
+
+
+
+
+
+\end{document}

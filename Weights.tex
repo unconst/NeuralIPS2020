@@ -1,0 +1,52 @@
+\begin{center}
+
+\begin{tikzpicture}
+
+
+\begin{scope}[scale=0.8]
+
+    \node (a) at (0,0) [rectangle] {$f_0$};
+    \node (b) at (2,0) [rectangle] {$f_1$};
+    \node (c) at (4,0) [rectangle] {$f_2$};
+    \node (d) at (6,0) [rectangle] {$f_3$};
+    \node (e) at (8,0) [rectangle] {$f_4$};
+    \node (f) at (10,0) [rectangle] {$f_5$};
+    
+  
+    \path[every node/.style={font=\sffamily\small}]
+        (a) edge node [right] {} (b)
+        (b) edge node [right] {} (c)
+        (c) edge node [right] {} (d)
+        (c) edge node [right] {} (d)
+        (d) edge node [right] {} (e)
+        (e) edge node [right] {} (f)
+
+
+        (a) edge [loop above]  node[above]  {$w_{0,0}$} (a)
+        (b) edge [loop above]  node[above]  {$w_{1,1}$} (b)
+        (c) edge [loop above]  node[above]  {$w_{2,2}$} (c)
+        (d) edge [loop above]  node[above]  {$w_{3,3}$} (d)
+        (e) edge [loop above]  node[above]  {$w_{4,4}$}  (e)
+        (f) edge [loop above]  node[above]  {$w_{5,5}$}  (f)
+
+        (a) edge [bend right]  (b)
+        (a) edge [bend right]  (c)
+        (a) edge [bend right]  (d)
+        (a) edge [bend right]  (e)
+        (a) edge [bend right]  node[below]  {$w_{0,5}, w_{5,0}$}(f)
+        (b) edge [bend right]  (c)
+        (b) edge [bend right]  (d)
+        (b) edge [bend right]  (e)
+        (b) edge [bend right]  (f)
+        (c) edge [bend right]  (d)
+        (c) edge [bend right]  (e)
+        (c) edge [bend right]  (f)
+        (d) edge [bend right]  (e)
+        (d) edge [bend right]  (f)
+        (e) edge [bend right]  (f);
+    
+\end{scope}
+
+
+\end{tikzpicture}
+\end{center}
