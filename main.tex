@@ -1,4 +1,30 @@
 \documentclass{article}
+
+% if you need to pass options to natbib, use, e.g.:
+%     \PassOptionsToPackage{numbers, compress}{natbib}
+% before loading neurips_2020
+
+% ready for submission
+% \usepackage{neurips_2020}
+
+% to compile a preprint version, e.g., for submission to arXiv, add add the
+% [preprint] option:
+%     \usepackage[preprint]{neurips_2020}
+
+% to compile a camera-ready version, add the [final] option, e.g.:
+%     \usepackage[final]{neurips_2020}
+
+% to avoid loading the natbib package, add option nonatbib:
+     \usepackage[nonatbib]{neurips_2020}
+
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
 \usepackage[english]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage{listings}
@@ -11,8 +37,8 @@
 \usepackage{subcaption}
 \usepackage{bbm}
 \usepackage{amsmath}
-\graphicspath{ {.} }
 
+\graphicspath{ {.} }
 \include{Commands}
 \newtheorem{theorem}{Theorem}
 
@@ -21,52 +47,91 @@
 \definecolor{mauve}{rgb}{0.58,0,0.82}
 
 \lstset{frame=tb,
-  language=Java,
-  aboveskip=3mm,
-  belowskip=3mm,
-  showstringspaces=false,
-  columns=flexible,
-  basicstyle={\small\ttfamily},
-  numbers=none,
-  numberstyle=\tiny\color{gray},
-  keywordstyle=\color{blue},
-  commentstyle=\color{dkgreen},
-  stringstyle=\color{mauve},
-  breaklines=true,
-  breakatwhitespace=true,
-  tabsize=3
+	language=Java,
+	aboveskip=3mm,
+	belowskip=3mm,
+	showstringspaces=false,
+	columns=flexible,
+	basicstyle={\small\ttfamily},
+	numbers=none,
+	numberstyle=\tiny\color{gray},
+	keywordstyle=\color{blue},
+	commentstyle=\color{dkgreen},
+	stringstyle=\color{mauve},
+	breaklines=true,
+	breakatwhitespace=true,
+	tabsize=3
 }
-
 
 \title{BitTensor: An Intermodel Intelligence Measure}
 
-\author{\small Jacob Steeves \ Ala Shaabana \  Matthew McAteer \smallbreak \small jake@for.ai \ \ \ \ \ \ ala@for.ai \ \ \ \ \ \ matthew@for.ai}
+% The \author macro works with any number of authors. There are two commands
+% used to separate the names and addresses of multiple authors: \And and \AND.
+%
+% Using \And between authors leaves it to LaTeX to determine where to break the
+% lines. Using \AND forces a line break at that point. So, if LaTeX puts 3 of 4
+% authors names on the first line, and the last on the second line, try using
+% \AND instead of \And before the third author name.
+  % examples of more authors
+  % \And
+  % Coauthor \\
+  % Affiliation \\
+  % Address \\
+  % \texttt{email} \\
+  % \AND
+  % Coauthor \\
+  % Affiliation \\
+  % Address \\
+  % \texttt{email} \\
+  % \And
+  % Coauthor \\
+  % Affiliation \\
+  % Address \\
+  % \texttt{email} \\
+  % \And
+  % Coauthor \\
+  % Affiliation \\
+  % Address \\
+  % \texttt{email} \\
 
 
-\date{}
 \begin{document}
-
 
 \maketitle
 
 \begin{abstract}
-A purely inter-model version of a machine intelligence benchmark would allow us to measure intelligence directly as information without projecting that information onto labeled datasets. We propose a framework in which other learners measure the informational significance of their peers across a network and use a digital ledger to negotiate the scores. However, the main benefits of measuring intelligence with other learners are lost if the underlying scores are dishonest. As a solution, we show how competition for connectivity in the network can be used to force honest bidding. We first prove that selecting inter-model scores using gradient descent is a regret-free strategy: one which generates the best subjective outcome regardless of the behavior of others. We then empirically show that when nodes apply this strategy, the network converges to a ranking that correlates with the one found in a fully coordinated and centralized setting. The result is a fair mechanism for training an internet-wide, decentralized and incentivized machine learning system. Such a system produces – on an ongoing basis – a continually hardening and expanding benchmark at the generalized intersection of the participants. 
+
+The dominant approach to creating a machine learning system is to collect a dataset of training examples that demonstrate correct behavior for a desired task, then train that system to imitate these behaviors \cite{radford2019language}. The system's performance on that task is then measured against existing systems as benchmark. We argue that using labeled datasets creates single-subject matter experts that generalize rather poorly, with self-contained knowledge that cannot be shared with other models. To reconcile this, we propose BitTensor: a framework in which other models measure the informational significance of their peers across a network. Each model uses a digital ledger to negotiate their significance to the network. In doing so, BitTensor measures intelligence of each model with respect to intelligence itself, rather than via a projection onto labeled datasets. Additionally, we show how competition for connectivity in the network can be used to force honest bidding. We first prove that selecting inter-model scores using gradient descent is a regret-free strategy: one which generates the best subjective outcome regardless of the behavior of others. We then empirically show that when nodes apply this strategy, the network converges to a ranking that correlates with the one found in a fully coordinated and centralized setting. The result is a fair mechanism for training an internet-wide, decentralized and incentivized machine learning system. Such a system produces – on an ongoing basis – a continually hardening and expanding benchmark at the generalized intersection of the participants. 
 \end{abstract}
 
-\section{Introduction}
+The best in-class machine learning systems today boast high performance and trend-setting benchmarks at specific tasks for which they are trained. They utilize representations of inputs that are semantic, disjoint, and general enough to tackle a given task while maintaining their integrity \cite{radford2019language,devlin2018bert}. However, when dealing with unexpected tasks or slight changes in data distribution these models become brittle and sensitive, making them narrow experts rather than resilient generalists \cite{radford2019language}. This is due to the models' reliance on training feedback mechanisms that benchmark them against examples of data rather than direct knowledge \cite{wang2018glue}. 
 
-Almost exclusively, best-in-class machine learning systems require knowledge previously extracted from datasets: \textit{representations} of inputs which are semantic, dis-joint, causal, and general enough to tackle a wide variety of problems \cite{radford2019language,devlin2018bert}. The production of this form of intelligence globally, however, still relies on a feedback mechanism which benchmarks it against specific tasks, rather than in knowledge directly \cite{wang2018glue}. Since the mechanism is misaligned to the salient feature being produced, a large portion of work is lost. Niche intelligence systems are not really possible for instance, since they would need to improve the tasks in totality before they were valued. Indeed, all work that it is not currently state-of-the-art is pruned this way. The low-resolution is further compounded by its lack of breadth: the narrowness of the domain described by the tasks make it easier for models to buy progress without improved general-understanding \cite{chollet2019measure}. Nor can we measure how much one team's model could improve another. This ensures the field is inherently non-collaborative, with the majority of researchers world-wide in essence pitted against each other \cite{Riabinin2020learningathome}. Ultimately, the only users capable of creating the systems with high performance are those with the means and resources to train the largest models.
-\smallskip
+Machine learning systems are trained on a dataset of training examples that demonstrate desired behavior for a given task, and then its intelligence (i.e. performance) is then evaluated on independent and identically distributed examples \cite{radford2019language, chollet2019measure}. Finally, the system's performance on that task is measured against existing systems as a ``performance benchmark". In contrast, if the mechanism is misaligned to the salient feature being produced, then a large portion of the work is lost as a result. This low resolution and sensitivity to changes in data is further compounded when considering the following:
 
-The aim in this paper is to show how a collective of intelligence systems could be used to evaluate their peers. Crucially, the measure of intelligence is with respect to intelligence itself, in information-theoretic terms, rather than via a projection onto labeled datasets. Moreover, models share knowledge with each other and it can compound in the system without needing to be relearned by every new model. In essence the benchmark is an intelligence market which rewards models who improve knowledge within it.\footnote{“The iron rule of nature is: you get what you reward for. If you want ants to come, you put sugar on the floor.” - Charlie Munger} We design the benchmark to run in a continuous, asynchronous fashion, peer-to-peer (p2p) fashion across the internet. Any number of supervised or unsupervised tasks, engineers, or connected computers can be added concurrently. Since this introduces trust-less computation \footnote{ In decentralized systems, trust is shifted from the individuals to the network itself, "trustless" usually means "minimal trust is required" w.r.t the protocol}, we also dedicate a part of this paper to explaining how the system remains fair when little assurance can be given about the computers which compose it. 
-\smallskip
+\begin{enumerate}
+	\item Lack of breadth: the narrowness of the domain described by the tasks make it easier for models to ``buy progress" without improved general understanding \cite{chollet2019measure}.
+	\item Lack of inter-model knowledge transfer: measuring how much one model could improve another is not possible due to the inherent incompatibility between model architectures. 
+\end{enumerate}
 
+After training, these models become very good at performing only that desired task. We argue that the measure of intelligence should be -- in information-theoretic terms -- with respect to \textit{intelligence} itself rather than via a projection onto labeled datasets. Further, the lack of inter-model knowledge transfer ensures that the field is inherently non-collaborative, with the majority of researchers world-wide in essence contending against each other \cite{Riabinin2020learningathome}. Ultimately, the only users capable of creating the systems with high performance are those with the means and resources to train the largest models.
 
-\section{Method}
+We present a novel framework in which a collective of intelligence systems can be used to evaluate their peers. By using intelligence itself as the measure of a model's intelligence, this allows models to share knowledge with each other and removes the need to re-train models when new information arrives. Finally, this turns the performance benchmark into an intelligence market that rewards models that improve knowledge within it. \footnote{“The iron rule of nature is: you get what you reward for. If you want ants to come, you put sugar on the floor.” - Charlie Munger} We design the benchmark to run in a continuous and asynchronous fashion across a peer-to-peer (P2P) network. Since this introduces trustless computation \footnote{ In decentralized systems, trust is shifted from the individuals to the network itself, "trustless" usually means "minimal trust is required" w.r.t the protocol} we also dedicate a part of this paper to explaining how the system remains fair when little assurance can be given about the computers that compose it. 
+
+The contributions of this paper are thus three-fold:
+\begin{enumerate}
+	\item We introduce a P2P based intelligence framework.
+	\item We show how models can share knowledge to increase each other's performance and remove the need to re-train models each time new data arrives. 
+	\item We propose turning typical data-based performance benchmarks into an intelligence market, in which models that improve knowledge are rewarded. 
+\end{enumerate}
+
+The rest of this paper is organized as follows: Section~\ref{methodology} presents the intelligence benchmark and ranking mechanism that models use to evaluate each other. Section~\ref{analysis} considers the scenario where participants are not honestly reporting the significance of their peers, and proposes a method to detect such behavior. Section ~\ref{experiments} highlights the experiments performed to verify the function of the framework. Finally, Section~\ref{conclusion} presents a summary and future works on this system.
+
+\section{Methodology}
+\label{methodology}
 
 \subsection{Benchmark}
 
-The network is composed by $n$ unique parameterized functions $F = {f_0, ...,  f_j, ...f_n}$ where each function is producing an output tensor $f_i(F(x))$, a 'representation' from an input tensor $F(x) = [f_{0(x)} ... f_{n(x)}]$ gathered by querying its neighbors. Each function is training asynchronously over a dataset $D_i=[X,Y]$ such that, given an error function $\mathcal{Q}_i$, its expectation over that data $E_{Di}$ defines a loss $\mathcal{L}_i = E_{Di}[\mathcal{Q}_i( \ y, \ f_i(F(x)) \ )]$. We assume these losses are measured on the same scale and thus our benchmark $\mathcal{B}$ can be defined by their sum:
+The network is composed by $n$ unique parameterized functions $F = {f_0, ...,  f_j, ...f_n}$ where each function is producing an output tensor $f_i(F(x))$, a 'representation' from an input tensor $F(x) = [f_0{(x)} ... f_n{(x)}]$ gathered by querying its neighbors. Each function is training asynchronously over a dataset $D_i=[X,Y]$ such that, given an error function $\mathcal{Q}_i$, its expectation over that data $E_{Di}$ defines a loss $\mathcal{L}_i = E_{Di}[\mathcal{Q}_i( \ y, \ f_i(F(x)) \ )]$. We assume these losses are measured on the same scale and thus our benchmark $\mathcal{B}$ can be defined by their sum:
 \bigskip
 
 \begin{equation}
@@ -74,11 +139,11 @@ The network is composed by $n$ unique parameterized functions $F = {f_0, ...,  f
 \end{equation}
 
 \begin{figure}[H]
-    \centering
-    \hspace*{-2cm}
-    \input{Neurons.tex}
-%    \label{fig:progdense_diagram}
-    \caption{n=5 parameterized functions with losses $\mathcal{L}_i$ and datasets $D_i$.}
+	\centering
+	\hspace*{-2cm}
+	\input{Neurons.tex}
+	%    \label{fig:progdense_diagram}
+	\caption{$n=5$ parameterized functions with losses $\mathcal{L}_i$ and datasets $D_i$.}
 \end{figure}{}
 
 Each parameterized function is represented here in its most abstract sense\cite{hinton2015distilling} and need only accept the same input type $x$ and produce the same output dimension to fit within the network. For instance, unicode encoded strings $x$, and responses: their semantic representations within some standard dimension. This widened scope ensures participants can be multi-task \cite{kaiser2017model}, use completely distinct computing substrates \cite{alex2014cortical} or train on unique datasets. \cite{lample2019crosslingual}. 
@@ -103,15 +168,15 @@ It is not possible to compute the ranking score above without access to the para
 \bigskip
 
 \begin{equation}
- w_{ij} = \ \ \sum_{x \in D_i} \Delta F^T(x)_j * H(\mathcal{Q}_i(x)) * \Delta F(x)_j
+w_{ij} = \ \ \sum_{x \in D_i} \Delta F^T(x)_j * H(\mathcal{Q}_i(x)) * \Delta F(x)_j
 \end{equation}
 
- \begin{figure}[H]
-    \centering
-    \hspace*{-2cm}
-    \input{Weights.tex}
-%    \label{fig:progdense_diagram}
-    \caption{Inter-model contribution weights: $w_{i,j}$ the score attributed to $f_j$ from $f_i$}
+\begin{figure}[H]
+	\centering
+	\hspace*{-2cm}
+	\input{Weights.tex}
+	%    \label{fig:progdense_diagram}
+	\caption{Inter-model contribution weights: $w_{i,j}$ the score attributed to $f_j$ from $f_i$}
 \end{figure}{}
 
 The weights can be computed on the fly either approximately \cite{yu2017nisp}, or by using the full hessian of the error. We store them on a distributed ledger and allow participants to update them by making changes of bounded size: $W^{t+1}= W^t + \lambda \Delta W$, where $||W_i||_2 < \epsilon$ at block step $t$. We also enforce that the scores in each row sum to 1, $||w||_1 = 1$. The equivalent ranking $R$ (2) can then be computed by normalizing column sum of the weight matrix:
@@ -137,22 +202,29 @@ R = \frac{1}{n} W^T \circ S * \mathbbm{1}
 S^{t+1} = S^t + \tau * \frac{R}{||R||_2} 
 \end{equation}
 
-The $\circ$ here is the Hadamard product between the $n \times n$ matrix $W$ and the $n \times n$ matrix containing $S$ in each column, and $t$ is the time-step referred to in Section 2.3 (measured in distinct blocks on the distributed ledger). By design (5) increases the importance of those with stake, $s_0 * w_{ij}$. This serves two purposes: (1) since it is finite, new computers cannot spuriously create nodes to game the ranking, and (2) the resource provides mechanism power. By providing it to nodes with large rank, this ensures that those with weight must have worked to attain it, or indirectly subsidized those who have done so already. A single staked token would be enough to bootstrap the process. \footnote{The propagation of a resource mocks the flow of the brain-derived neurotrophic factor (BDNF). \cite{Bathina1989neurotrophin}} 
+The $\circ$ here is the Hadamard product between the $n \times n$ matrix $W$ and the $n \times n$ matrix containing $S$ in each column, and $t$ is the time-step referred to in Section 2.3 (measured in distinct blocks on the distributed ledger). By design (5) increases the importance of those with stake, $s_0 * w_{ij}$. This serves two purposes: 
+
+\begin{enumerate}
+	\item Since it is finite, new computers cannot spuriously create nodes to game the ranking.
+	\item The resource provides mechanism power.
+\end{enumerate}
+
+By providing it to nodes with large rank, this ensures that those with weight must have worked to attain it, or indirectly subsidized those who have done so already. A single staked token would be enough to bootstrap the process. \footnote{The propagation of a resource mocks the flow of the brain-derived neurotrophic factor (BDNF). \cite{Bathina1989neurotrophin}} 
 \smallskip
 
 \begin{algorithm}
-\caption{Inflation mechanism}
-\begin{algorithmic} 
-
-\REQUIRE $S = \ [n \times 1] \ \textrm{Stake Vector}$
-\REQUIRE $W = \ [n \times n] \ \textrm{Weight Matrix}$
-\REQUIRE $\tau > 0 \ \textrm{inflation rate}$
-\WHILE{$\text{TRUE}$}
-\STATE $W = W + \lambda \Delta W$
-\STATE $R = \frac{1}{n} W^T \circ S * \mathbbm{1}$
-\STATE $S = S + \tau * \frac{R}{||R||_2}  $
-\ENDWHILE
-\end{algorithmic}
+	\caption{Inflation mechanism}
+	\begin{algorithmic} 
+		
+		\REQUIRE $S = \ [n \times 1] \ \textrm{Stake Vector}$
+		\REQUIRE $W = \ [n \times n] \ \textrm{Weight Matrix}$
+		\REQUIRE $\tau > 0 \ \textrm{inflation rate}$
+		\WHILE{$\text{TRUE}$}
+		\STATE $W = W + \lambda \Delta W$
+		\STATE $R = \frac{1}{n} W^T \circ S * \mathbbm{1}$
+		\STATE $S = S + \tau * \frac{R}{||R||_2}  $
+		\ENDWHILE
+	\end{algorithmic}
 \end{algorithm}
 \smallskip
 
@@ -176,36 +248,20 @@ Here, the shift term $\mu_j$ is the average of the weights in each column $\mu_j
 
 The steps to run a network participant are:
 \begin{itemize}
-
-\item[1]  Participant defines its dataset $D_i$, loss $\mathcal{L}_i$ and parameterized function $f_i$
-\item[2]  At each training iteration the participant broadcasts batches of examples from $D_i$ to its peers $[\textit{batch\_size}, x]$
-\item[3]  Responses $F(x)$ from the network produce a loss-gradient $\frac{\partial \mathcal{L}}{\partial F}$ which back-propagates through $f_i$ and out to the network.
-\item[4]  During 2 and 3 the participant competitively selects the weights for their row $w_{ij} \in W$.
-\item[5]  Participants submit changes to the weights $\Delta W_i$ which, in-turn changes the ranking and induces inflation $\tau * R$.
-\item[6]  Participants disconnect and verify the model in a normal manner.
+	
+	\item[1]  Participant defines its dataset $D_i$, loss $\mathcal{L}_i$ and parameterized function $f_i$
+	\item[2]  At each training iteration the participant broadcasts batches of examples from $D_i$ to its peers $[\textit{batch\_size}, x]$
+	\item[3]  Responses $F(x)$ from the network produce a loss-gradient $\frac{\partial \mathcal{L}}{\partial F}$ which back-propagates through $f_i$ and out to the network.
+	\item[4]  During 2 and 3 the participant competitively selects the weights for their row $w_{ij} \in W$.
+	\item[5]  Participants submit changes to the weights $\Delta W_i$ which, in-turn changes the ranking and induces inflation $\tau * R$.
+	\item[6]  Participants disconnect and verify the model in a normal manner.
 \end{itemize}
 
 Peers only communicate with computers that hold stake as a consequence of section 2.5. Those that fail to produce value will be pruned naturally as participants learn to differentiate signal from noise.
 
-\subsection{Conditional computation}
-
-As the network grows, outward bandwidth will become the major bottleneck. Components learn to trim outward bandwidth by employing a Sparsely-Gated Mixture-of-Experts (SGMoE) \cite{shazeer2017outrageously} layer at the input. The gating layer determines a sparse combination of children to query for each example and then re-joins them using the the gating weights $g_j(x)$. The combined gated inputs are fed as input to the local function: 
-
-\begin{equation}
-f_i = f_i(G(x)) \ \ \ \  \textrm{ }
-\end{equation}
-
-\begin{equation}
-G(x) = [ ..., g_j(x) * f_j(x), ...]
-\end{equation}
-
-
-The layer cuts outward bandwidth, querying only a small subset of peers for each example. The gating function is trainable w.r.t to the loss and its weights act as a proxy for importance $w_{ij} \in W$. This method has been shown to drastically increase the potential for outward bandwidth in datacenter training,\cite{shazeer2017outrageously} and has been investigated in a peer-to-peer (P2P) setting as well \cite{Riabinin2020learningathome}
-
-
 \subsection{Extracting knowledge}
 
-Inter-node dependence in the network is broken using \textbf{distillation}\cite{hinton2015distilling}, a compression and knowledge technique in which a smaller model -- the student - mimics the behaviour of an ensemble. We employ this technique over the gating ensemble (10) where the student model learns to minimize the cross-entropy (shown below as KL) between the logits produced by the gating network and its predicted distribution. \cite{Sanh2019DistilBERT}
+Inter-node dependence in the network is broken using distillation\cite{hinton2015distilling}, a compression and knowledge technique in which a smaller model -- the student - mimics the behaviour of an ensemble. We employ this technique over the gating ensemble (10) where the student model learns to minimize the cross-entropy (shown below as KL) between the logits produced by the gating network and its predicted distribution. \cite{Sanh2019DistilBERT}
 \smallskip
 
 \begin{equation}
@@ -216,21 +272,28 @@ We use the distilled model as proxy to cut recursive calling between each compon
 \smallskip
 
 \begin{figure}[H]
-    \centering
-    \hspace*{0cm}
-    \input{distillation.tex}
-%    \label{fig:progdense_diagram}
-    \caption{Queries propagate to depth=1 before the distilled model is used.}
+	\centering
+	\hspace*{0cm}
+	\input{distillation.tex}
+	%    \label{fig:progdense_diagram}
+	\caption{Queries propagate to depth=1 before the distilled model is used.}
 \end{figure}{}
 
-
 \section{Analysis}
+\label{analysis}
 
 We consider the scenario where participants are not honestly reporting the significance of their peers. The network is progressing at discrete timesteps $t$ and it is reasonable to assume that each participant is attempting to maximize their subjective payoff over these steps.
 
 \subsection{Payoff Model}
 
-The staking system in Section 2.4 gives participants incentive to maximize their self-weight $w_{ii}$ while the competitive connectivity described in Section 2.5 makes it costly for participants to decrease the remaining weights $w_{ij}$ in their row. Since the row must sum to 1, we have a trade-off in two terms: (1) a utility term attached to the loss $U(\mathcal{L}(W))$ and (2) the token emission via inflation $\tau * R_i(W)$. Both of these are functions of the weights and, without loss of generality, measured in similar units:
+The staking system in Section 2.4 gives participants incentive to maximize their self-weight $w_{ii}$ while the competitive connectivity described in Section 2.5 makes it costly for participants to decrease the remaining weights $w_{ij}$ in their row. Since the row must sum to 1, we have a trade-off in two terms:
+
+\begin{enumerate}
+	\item A utility term attached to the loss $U(\mathcal{L}(W))$.
+	\item The token emission via inflation $\tau * R_i(W)$. 
+\end{enumerate}
+
+Both of these are functions of the weights and, without loss of generality, measured in similar units:
 \bigskip
 
 \begin{equation}
@@ -255,7 +318,14 @@ W^{t+1} = W^{t} + \lambda \Delta W
 
 \subsection{Empirical Model}
 
-Without access to the running network we evaluate our system using an empirical model. To derive the gradient steps in this model $\frac{\partial P_i}{\partial W_i}$ we make the following assumptions: (1) the utility functions are continuous-differentiable and can be approximated by their first order derivatives $\frac{\partial U}{\partial \mathcal{L}} = \alpha$ and (2) the network is converged to a local minimum in the inputs $\frac{\partial\mathcal{L}}{\partial F} = 0$. The first assumption is approximate for small changes of continuous functions and the second assumption is realistic after extended training. In Appendix 6.2 we derive the following gradient step:
+Without access to the running network we evaluate our system using an empirical model. To derive the gradient steps in this model $\frac{\partial P_i}{\partial W_i}$ we make the following assumptions: 
+
+\begin{enumerate}
+	\item The utility functions are continuous-differentiable and can be approximated by their first order derivatives $\frac{\partial U}{\partial \mathcal{L}} = \alpha$.
+	\item  he network is converged to a local minimum in the inputs $\frac{\partial\mathcal{L}}{\partial F} = 0$.
+\end{enumerate}  
+
+The first assumption is approximate for small changes of continuous functions and the second assumption is realistic after extended training. In Appendix 6.2 we derive the following gradient step:
 \smallskip
 
 \begin{equation}
@@ -269,25 +339,14 @@ Without access to the running network we evaluate our system using an empirical 
 \end{equation}
 \smallskip
 
-Here $F_W$ is the masked inputs from Section 2.5. $(F_W - F_{W_0})$ is the difference in the mask between the choice of weights $W$ and the weights at the minimum $W_0$ and $H( \mathcal{L}(F))$ is the $[n \times n]$ hessian of the loss over inputs $F$. This formulation is both  (1) intuitive: the gradient term $\frac{\partial L}{\partial W}$ measures the change in loss for any choice of weights, and (2) useful: it allows us to compute the ranking for simulated hessian terms.
+Here $F_W$ is the masked inputs from Section 2.5. $(F_W - F_{W_0})$ is the difference in the mask between the choice of weights $W$ and the weights at the minimum $W_0$ and $H( \mathcal{L}(F))$ is the $[n \times n]$ hessian of the loss over inputs $F$. This formulation is both intuitive and useful: the gradient term $\frac{\partial L}{\partial W}$ measures the change in loss for any choice of weights. Additionally, it also allows us to compute the ranking for simulated hessian terms.
 \smallskip
 
 The remainder of the network is deterministic, and can be described by a choice of $\theta = [\alpha, \tau, \lambda, n, \sigma, T, S, W, H]$. For instance, the secondary term, $\frac{\partial R}{\partial W}$ can be computed-directly from Section 2.4 and only depends on the stake vector $S$ and weights $W$.
 \smallskip
 
-\begin{itemize}
-  \item $n$: The number of nodes e.g. n=100. 
-  \item $\alpha$: The first order utility derivative $\frac{\partial U}{\partial \mathcal{L}} = \alpha$.
-  \item $\tau$: The block-inflation rate: $S^{t+1} = S^t + \tau * R$.
-  \item $\lambda$: The weight matrix learning rate: $W^{t+1} = W^t + \lambda \Delta W$.
-  \item $\sigma$, $T$: The activation function and temperature: $\sigma =  \frac{1}{ 1 + e^{-\frac{x}{T}} }$
-  \item $S$: The stake vector $[1 \times n]$
-  \item $W_0$: A initial weight matrix $ [n \times n]$
-  \item $H( \mathcal{L}(F))_i$: For each $f_i$, the hessian of the loss $L_i$ over inputs $F(x)$ $ n \times [n \times n]$
-\end{itemize}
-
-\subsection{Experiments}
-
+\section{Experiments}
+\label{experiments}
 \begin{figure}[!htb]
 	\centering
 	\includegraphics[scale=.34]{images/c_vs_c_nice.png}
@@ -313,14 +372,32 @@ We are interested in the correlation between $R^*$ and $R$ as we vary the ratio 
 Finally, in Figure-\ref{adaptive_tau} we implement an adaptive-$\tau$ strategy where the network varies the inflation rate. Initial inflation is zero and then increases until the weights begins to converge towards the main diagonal $w_{ii}=1$. We measure the sparsity $sparsity = sum(W_{dg})/sum(W)$, the ratio between the main diagonal and the remaining weights. As sparsity increases we push the market equilibrium by decreasing $\tau$. Figure shows this adaptive convergence for $\alpha=1$ with a sparsity target of 1.
 \smallskip
 
-\section{Discussion}
+\subsection{Discussion}
 
-Figure~\ref{coordvscomp} shows the relationship between the idealized rank and the competitive rank as a function of $\frac{\alpha}{\tau}$. Figure-\ref{coordvscomp}-a, $\frac{\alpha}{\tau} = 1$ shows the case where this ratio negatively effects the ranking accuracy. Here, all components have set $w_{ii} = 1$ and the resulting scores for all participants has converged to $1/n$. When this occurs, the system could decrease the inflation rate $\tau$ and push the network towards the high information markets seen in Figure-4-b, 4-c, \& 4-d. Figure-\ref{adaptive_tau} shows a basic implementation of this where $\tau$ adapts to the ratio between the row-sums and the main-diagonal. By lowering inflation, it subsequently 'costs less' to connect with peers. Profit maximizing nodes automatically adjust to the change and the system converges back towards an accurate ranking. Those with high ranks will oppose inflation decreased, while those with low ranks will welcome it. The equilibrium found in this meta game will most certainly depend on the number of participants, key to both the ranking accuracy and the market at its core. However, we leave this analysis for a follow up paper. 
+Figure~\ref{coordvscomp} shows the relationship between the idealized rank and the competitive rank as a function of $\frac{\alpha}{\tau}$. Figure-\ref{coordvscomp}-a, $\frac{\alpha}{\tau} = 1$ shows the case where this ratio negatively effects the ranking accuracy. Here, all components have set $w_{ii} = 1$ and the resulting scores for all participants has converged to $1/n$. When this occurs, the system could decrease the inflation rate $\tau$ and push the network towards the high information markets seen in Figure-\ref{coordvscomp}-b, c, and d. Figure-\ref{adaptive_tau} shows a basic implementation of this where $\tau$ adapts to the ratio between the row-sums and the main-diagonal. By lowering inflation, it subsequently 'costs less' to connect with peers. Profit maximizing nodes automatically adjust to the change and the system converges back towards an accurate ranking. Those with high ranks will oppose inflation decreased, while those with low ranks will welcome it. The equilibrium found in this meta game will most certainly depend on the number of participants, key to both the ranking accuracy and the market at its core. However, we leave this analysis for a follow up paper. 
 \smallskip
 
 \section{Conclusion}
-
+\label{conclusion}
 We have proposed an inter-model benchmark that can run in a P2P setting outside of a trusted environment. We started with a typical machine learning framework defined by a set of functions with their losses over given datasets, then derived an idealized ranking score. The measure produced an information theoretic score that new participants can improve by learning how to be useful to their peers. However, the system is incomplete without a mechanism that prevents participants from ranking dishonestly. To resolve this, we proposed an incentive scheme and a differential allocation system over the network weights. The system allows the participants to train for connectivity in the graph. Following this, we described how to increase the outward bandwidth in the system using a trainable gating network and how to cut independence between nodes using distillation. Finally we showed how increasing the number of nodes in the system and fixing the inflation mechanism properly ensured that the resulting rank scores would correlate with those found in a idealized setting. While this is true, stake in the system holds value as a means to drive what the network learns. That benchmark is continually being solved by the participants, compounding what has been learned before and making it available to new learners in the system.
+
+%\begin{itemize}
+%	\item $n$: The number of nodes e.g. n=100. 
+%	\item $\alpha$: The first order utility derivative $\frac{\partial U}{\partial \mathcal{L}} = \alpha$.
+%	\item $\tau$: The block-inflation rate: $S^{t+1} = S^t + \tau * R$.
+%	\item $\lambda$: The weight matrix learning rate: $W^{t+1} = W^t + \lambda \Delta W$.
+%	\item $\sigma$, $T$: The activation function and temperature: $\sigma =  \frac{1}{ 1 + e^{-\frac{x}{T}} }$
+%	\item $S$: The stake vector $[1 \times n]$
+%	\item $W_0$: A initial weight matrix $ [n \times n]$
+%	\item $H( \mathcal{L}(F))_i$: For each $f_i$, the hessian of the loss $L_i$ over inputs $F(x)$ $ n \times [n \times n]$
+%\end{itemize}
+
+\section{Broader Impact}
+In order to provide a balanced perspective, authors are required to include a statement of the potential broader impact of their work, including its ethical aspects and future societal consequences. Authors should take care to discuss both positive and negative outcomes.
+
+\small
+\bibliographystyle{IEEEtran}
+\bibliography{references}        % References
 
 \section{Appendix}
 
@@ -368,7 +445,12 @@ With the gradient of the loss:
 
 \subsection{Setup}
 
-We analyze the system by characterizing the behaviour of participants via their payoff in two terms (1) the utility attached to that participant’s loss as a function of their weights $U(L(W))$. $U$ is assumed roughly linear for small change in the weight matrix, $U(\mathcal{L}) = \alpha*\mathcal{L}$, and $\frac{\partial U}{\partial \mathcal{L}} = \alpha$ and (2) the network is converged to a local minimum in the inputs $\frac{\partial\mathcal{L}}{\partial F} = 0$. From the payoff formulation in 6.3 we write:
+We analyze the system by characterizing the behaviour of participants via their payoff in two terms:
+
+\begin{enumerate}
+	\item The utility attached to that participant’s loss as a function of their weights $U(L(W))$. $U$ is assumed roughly linear for small change in the weight matrix, $U(\mathcal{L}) = \alpha*\mathcal{L}$, and $\frac{\partial U}{\partial \mathcal{L}} = \alpha$.
+	\item The network is converged to a local minimum in the inputs $\frac{\partial\mathcal{L}}{\partial F} = 0$.
+\end{enumerate} (1)  and (2)  From the payoff formulation in 6.3 we write:
 \smallskip
 
 \begin{equation}
@@ -462,7 +544,4 @@ The constant $\lambda$ can be removed and the second term depends only on weight
 Finally, we use the the fact that for vectors $a$, $b$ and angle between them $\theta$ the magnitude of the dot product is $|a||b|cos \theta$. This is maximized when the vectors are parallel $\theta = 0$ and $cos(\theta) = 1$, or $\Delta W_i = \kappa* \frac{\partial P}{\partial W_i}$ for some constant $\kappa > 0$. Thus $P(\Delta W^*)$ is maximize when $\Delta W_i^* = \kappa * \frac{\partial P}{\partial W_i}$. Since $P(\Delta W^*) = P(\Delta W_*)$ in the maximum, this proves the point.
 \smallskip
 
-
-\bibliographystyle{IEEEtran}
-\bibliography{references}        % References
 \end{document}

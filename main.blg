@@ -1,0 +1,65 @@
+This is BibTeX, Version 0.99d (TeX Live 2019)
+Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
+The top-level auxiliary file: main.aux
+The style file: IEEEtran.bst
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Database file #1: references.bib
+-- IEEEtran.bst version 1.14 (2015/08/26) by Michael Shell.
+-- http://www.michaelshell.org/tex/ieeetran/bibtex/
+-- See the "IEEEtran_bst_HOWTO.pdf" manual for usage information.
+Name 1 in "LeCun, Yann, and Denker John S, and Solla Sara A" has a comma at the end for entry lecun1989optimalbraindamage
+while executing---line 2403 of file IEEEtran.bst
+Name 2 in "LeCun, Yann, and Denker John S, and Solla Sara A" has a comma at the end for entry lecun1989optimalbraindamage
+while executing---line 2403 of file IEEEtran.bst
+Too many commas in name 1 of "Sanh, Victor; Debut, Lysandre; Chaumond, Julien; Wolf, Thomas" for entry Sanh2019DistilBERT
+while executing---line 2403 of file IEEEtran.bst
+Too many commas in name 1 of "Sanh, Victor; Debut, Lysandre; Chaumond, Julien; Wolf, Thomas" for entry Sanh2019DistilBERT
+while executing---line 2403 of file IEEEtran.bst
+
+Done.
+You've used 15 entries,
+            4087 wiz_defined-function locations,
+            885 strings with 9910 characters,
+and the built_in function-call counts, 7077 in all, are:
+= -- 491
+> -- 257
+< -- 3
++ -- 122
+- -- 61
+* -- 314
+:= -- 1156
+add.period$ -- 30
+call.type$ -- 15
+change.case$ -- 15
+chr.to.int$ -- 0
+cite$ -- 15
+duplicate$ -- 594
+empty$ -- 629
+format.name$ -- 74
+if$ -- 1579
+int.to.chr$ -- 0
+int.to.str$ -- 15
+missing$ -- 136
+newline$ -- 68
+num.names$ -- 15
+pop$ -- 393
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 2
+skip$ -- 524
+stack$ -- 0
+substring$ -- 17
+swap$ -- 356
+text.length$ -- 3
+text.prefix$ -- 0
+top$ -- 5
+type$ -- 15
+warning$ -- 0
+while$ -- 16
+width$ -- 17
+write$ -- 139
+(There were 4 error messages)
