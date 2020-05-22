@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.5.8)  16 MAY 2020 22:20
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.5.8)  21 MAY 2020 23:16
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1335,45 +1335,60 @@ Package microtype Info: Loading generic protrusion settings for font family
 
 {/usr/local/texlive/2019/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] (./Neur
 ons.tex)
-[2] (./Weights.tex)
-LaTeX Font Info:    Try loading font information for U+bbm on input line 186.
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [2]
+(./Weights.tex) [3]
+LaTeX Font Info:    Try loading font information for U+bbm on input line 194.
 
 (/usr/local/texlive/2019/texmf-dist/tex/latex/bbm-macros/ubbm.fd
 File: ubbm.fd 1999/03/15 V 1.2 Font definition for bbm font - TH
-) [3]
+)
 Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
-put line 216.
+put line 224.
  [4]
-(./distillation.tex) [5] [6]
-<images/c_vs_c_nice.png, id=251, 953.5625pt x 925.4575pt>
+
+LaTeX Warning: Reference `se:competitive_weight' on page 5 undefined on input l
+ine 269.
+
+[5] (./distillation.tex) [6]
+<images/c_vs_c_nice.png, id=267, 953.5625pt x 925.4575pt>
 File: images/c_vs_c_nice.png Graphic file (type png)
 <use images/c_vs_c_nice.png>
-Package pdftex.def Info: images/c_vs_c_nice.png  used on input line 352.
+Package pdftex.def Info: images/c_vs_c_nice.png  used on input line 377.
 (pdftex.def)             Requested size: 324.20695pt x 314.65138pt.
-<images/adaptive_tau.png, id=253, 721.69624pt x 668.4975pt>
+<images/adaptive_tau.png, id=269, 721.69624pt x 668.4975pt>
 File: images/adaptive_tau.png Graphic file (type png)
 <use images/adaptive_tau.png>
-Package pdftex.def Info: images/adaptive_tau.png  used on input line 360.
+Package pdftex.def Info: images/adaptive_tau.png  used on input line 385.
 (pdftex.def)             Requested size: 194.86058pt x 180.49673pt.
- [7 <./images/c_vs_c_nice.png>] [8 <./images/adaptive_tau.png>] (./main.bbl) [9
-] [10] [11] [12]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 547.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 547.
+ [7]
+Underfull \vbox (badness 5893) has occurred while \output is active []
+
+ [8 <./images/c_vs_c_nice.png> <./images/adaptive_tau.png>] (./main.bbl [9]) [1
+0] [11]
+[12]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 572.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 572.
  (./main.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 547.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 547.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 572.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 572.
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: D769CA7661FC34E37996206E74BEC9F1;1474.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 547.
+(rerunfilecheck)             Checksum: BD6286D6DDB1541F42FEE105199C9AB4;1547.
+
+
+LaTeX Warning: There were undefined references.
+
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 572.
  ) 
 Here is how much of TeX's memory you used:
- 35173 strings out of 492616
- 677426 string characters out of 6129482
- 933847 words of memory out of 5000000
- 38267 multiletter control sequences out of 15000+600000
- 589788 words of font info for 214 fonts, out of 8000000 for 9000
+ 35200 strings out of 492616
+ 677749 string characters out of 6129482
+ 932847 words of memory out of 5000000
+ 38274 multiletter control sequences out of 15000+600000
+ 590178 words of font info for 220 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 62i,15n,94p,1658b,1107s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 62i,15n,94p,1587b,1107s stack positions out of 5000i,500n,10000p,200000b,80000s
  </Users/ala/Library/texlive/2019/texmf-var/fonts/pk/ljfour/public/bbm/bbm10.
 600pk>{/usr/local/texlive/2019/texmf-dist/fonts/enc/dvips/base/8r.enc}{/usr/loc
 al/texlive/2019/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}</usr/local
@@ -1399,10 +1414,10 @@ ype1/urw/helvetic/uhvr8a.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/ur
 w/times/utmb8a.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/urw/times/ut
 mr8a.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
 
-Output written on main.pdf (12 pages, 1102274 bytes).
+Output written on main.pdf (12 pages, 1107215 bytes).
 PDF statistics:
- 423 PDF objects out of 1000 (max. 8388607)
- 361 compressed objects within 4 object streams
- 111 named destinations out of 1000 (max. 500000)
- 36151 words of extra memory for PDF output out of 42996 (max. 10000000)
+ 449 PDF objects out of 1000 (max. 8388607)
+ 387 compressed objects within 4 object streams
+ 122 named destinations out of 1000 (max. 500000)
+ 36159 words of extra memory for PDF output out of 42996 (max. 10000000)
 

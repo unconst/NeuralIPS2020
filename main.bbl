@@ -74,6 +74,11 @@ B.~S and D.~UN, ``Brain-derived neurotrophic factor and its clinical
   implications,'' \emph{Arch Med Sci. 2015;11(6):1164–1178.
   doi:10.5114/aoms.2015.56342}, 2015.
 
+\bibitem{shazeer2017outrageously}
+N.~Shazeer, A.~Mirhoseini, K.~Maziarz, A.~Davis, Q.~Le, G.~Hinton, and J.~Dean,
+  ``Outrageously large neural networks: The sparsely-gated mixture-of-experts
+  layer,'' 2017.
+
 \bibitem{Sanh2019DistilBERT}
 L.~C. J. W.~T. Sanh, Victor;~Debut, ``Distilbert, a distilled version of bert:
   smaller, faster, cheaper and lighter,'' \emph{arXiv preprint
