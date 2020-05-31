@@ -47,7 +47,7 @@
 \definecolor{mauve}{rgb}{0.58,0,0.82}
 
 \lstset{frame=tb,
-	language=Java,
+	language=C,
 	aboveskip=3mm,
 	belowskip=3mm,
 	showstringspaces=false,
@@ -100,32 +100,33 @@
 \maketitle
 
 \begin{abstract}
-The dominant tools used to guide machine intelligence are typically datasets of labeled examples which rank systems on a set of predefined tasks. However, we argue that task based benchmarks are inefficient guides for machine intelligence. Instead, we propose a benchmark which ranks \textit{knowledge production} from within a network of intelligence systems. In this paper we describe how this benchmark is constructed and how it is negotiated by computers that share knowledge peer-to-peer (P2P) across the internet. Since this internet based negotiation introduces game-theoretic considerations, we design methods to ensure the veracity of the benchmark when peers remain self-interested and trustless. We then test our design by empirically showing that the negotiation closely matches the desired ranking at the system's competitive equilibrium. The result is a benchmark which is directly aligned with knowledge production. Further, it is inherently collaborative, open, decentralized, and can consume knowledge connected by an internet fabric.
+The dominant tools used to guide machine intelligence are typically datasets of labeled examples which rank systems on a set of predefined tasks. However, we argue that this method based on benchmarking tasks is an inefficient guide for machine intelligence. Instead, we propose a benchmark that ranks \textit{knowledge production} from within a network of intelligence systems. The result is a system that is more efficient, collaborative, and generalized. In this paper we describe how this benchmark is constructed and how it is negotiated by computers that share knowledge peer-to-peer (P2P) across the internet. Since this internet based negotiation introduces game-theoretic considerations, we design methods to ensure the veracity of the benchmark when peers remain self-interested and trustless. We then test our design by empirically showing that the negotiation closely matches the desired ranking at the system's competitive equilibrium. 
+
+%The result is a benchmark that is inherently collaborative, efficient, and decentralized.
 \end{abstract}
 
 Increasingly, state-of-the-art machine learning systems focus on the production of \textit{machine knowledge}, non-task specific understanding of inputs, which can be later tuned to a wide variety of problems \cite{devlin2018bert}. This shift is a consequence of the fact that a focus on tasks during training produces narrow specialists rather than resilient generalists \cite{radford2019language}. In contrast, while becoming the dominant technique for training individual models, the field still opts for task based objectives as the method of reward at the highest level of its evolution \cite{wang2018glue}. The misalignment between this salient feature (machine knowledge) and its feedback mechanism (task performance) is inefficient for the following reasons:
 
 \begin{enumerate}
-	\item A definition of intelligence provided by tasks performance produces a feedback mechanism which converges the field towards this narrow task definition. Unfortunately, simply expanding the set tasks to cover the general problem would require a near infinite number of supervised (dataset, task) pairs \cite{radford2019language}. Because of this, the feedback mechanism at the highest level of the field remains misaligned with general intelligence \cite{chollet2019measure}. 
+	\item A definition of intelligence provided by task performance produces a feedback mechanism which converges the field towards a narrow definition. Unfortunately, simply expanding the set tasks to cover the general problem would require a near infinite number of supervised (dataset, task) pairs \cite{radford2019language}. Consequently, task-based feedback mechanisms at the highest level of the field make it intractable to achieve a high level of generalism \cite{chollet2019measure}. 
 	
-	\item Representational knowledge can be measured in a much higher dimensional space than the low-dimensional scores produced by the tasks. For instance, the 1024 dimensional floating point embedding produced by BERT in comparison to the 8 dimensional score produced by SuperGLUE. In the low dimensional space, we cannot easily apply divide-and-conquer to the problem to reward niche machine learning systems for working on specific aspects of understanding. This is wasteful as those models may have been costly to create in the first place.
+	{\color{red}\item Representational knowledge can be measured in a much higher dimensional space than the low-dimensional scores produced by the tasks. For instance, the 1024 dimensional floating point embedding produced by BERT \cite{devlin2018bert} in comparison to the 8 dimensional score produced by SuperGLUE \cite{wang2019superglue}. In the low dimensional space, we cannot easily divide and conquer the problem to reward niche machine learning systems for working on specific aspects of understanding. This is wasteful as those models may be costly to create in the first place.
 	
-	\item We do not measure how much one team's model improved the collective. Task based benchmarks produce a winner-take-all competition which prunes all but the best. The result is a world-wide challenge where only those with the means and the resources to train the largest models may contribute to the state-of-the-art. 
+	\item We do not measure how much one team's model improved the collective. Task based benchmarks produce a winner-take-all competition which prunes all but the best. The result is a world-wide challenge where only those with the means and the resources to train the largest models may contribute to the state-of-the-art. }
 \end{enumerate}
 
 
-A benchmark that directly measures machine intelligence would be very beneficial.  \footnote{“The iron rule of nature is: you get what you reward for. If you want ants to come, you put sugar on the floor.” - Charlie Munger}. By analogy, similar to rewarding domain specialists or generalists in human cultures, not against their ability to solve tasks, but their ability to improve overall understanding. Our proposal is a framework in which models directly share knowledge that they have learned with each other. Their peers select that knowledge for its ability to improve their own understanding. Crucially, each model's performance is measured by its ability to improve collective understanding of inputs rather than against any specific task. This generalization allows the system to reward models for improving small regions of the general problem. Inherently the benchmark introduces knowledge sharing and the demand for performance guides a de-facto ``market for intelligence".   
-\smallskip
+A benchmark that directly measures machine knowledge production would be very beneficial  \footnote{“The iron rule of nature is: you get what you reward for. If you want ants to come, you put sugar on the floor.” - Charlie Munger}. By analogy, similar to rewarding domain specialists or generalists in human cultures -- not against their ability to solve tasks -- but their ability to improve overall understanding. Our proposal is a framework in which models directly share knowledge that they have learned with each other. Their peers select that knowledge for its ability to improve their own understanding. Crucially, each model's performance is measured by its ability to improve collective understanding of inputs rather than against any specific task. {\color{red} This re-framing of the measurement technique allows the system to reward models for improving small regions of the general problem. Inherently, the benchmark introduces knowledge sharing, while the demand for performance guides a de-facto ``market for intelligence".   }
 
-Practically, we design the benchmark to run in a continuous and asynchronous fashion, peer-to-peer (P2P) across the wide network. Since this introduces trustless computation \footnote{ In decentralized systems, trust is shifted from the individuals to the network itself, "trustless" usually means "minimal trust is required" with respect to the protocol} we dedicate a part of this paper to explaining how the system remains fair when little assurance can be given about the computers that compose it. The contributions of this paper are thus four-fold:
+Practically, we design the benchmark to run in a continuous and asynchronous fashion, peer-to-peer (P2P) across the Internet. Since this introduces trustless computation \footnote{ In decentralized systems, trust is shifted from the individuals to the network itself, "trustless" usually means "minimal trust is required" with respect to the protocol} we dedicate a part of this paper to explaining how the system remains fair when little assurance can be given about the computers that compose it. In summary, the contributions of this paper are thus four-fold:
 \begin{enumerate}
 	\item We introduce a P2P based intelligence framework.
-	\item We introduce an ``intelligence market" that rewards models that improve representational knowledge within it.
-	\item We show how models can share knowledge to increase each other's performance which removes the need for others to re-learn that knowledge. 
-	\item We show how self-interested desire to minimize a loss function can be used to guide the network towards a fair ranking.
+	\item We introduce an ``intelligence market" that rewards models that improve representational knowledge within the network.
+	\item We show how models can share knowledge to increase each other's performance, which removes the need for others to re-learn that knowledge. 
+	\item We show how a self-interested desire to minimize a loss function can be used to guide the network towards a fair ranking.
 \end{enumerate}
 
-The rest of this paper is organized as follows: Section~\ref{methodology} presents the intelligence benchmark and ranking mechanism that models use to evaluate each other. Section~\ref{analysis} considers the scenario where participants are not honestly reporting the significance of their peers, and proposes a method to detect such behavior. Section ~\ref{experiments} highlights the experiments performed to verify the function of the framework. Finally, Section~\ref{conclusion} presents a summary and future works on this system.
+The rest of this paper is organized as follows: Section~\ref{methodology} presents the intelligence benchmark and ranking mechanism that models use to evaluate each other. Section~\ref{analysis} proposes a method to detect and respond to the scenario where participants are not honestly reporting the significance of their peers. Section ~\ref{experiments} highlights the experiments performed to verify the function of this framework. Finally, Section~\ref{conclusion} presents a summary and future works on this system.
 
 \section{Methodology}
 \label{methodology}
@@ -347,7 +348,7 @@ The remainder of the network is deterministic, and can be described by a choice 
 \label{experiments}
 \begin{figure}[!htb]
 	\centering
-	\includegraphics[scale=.34]{images/c_vs_c_nice.png}
+	\includegraphics[scale=.3]{images/c_vs_c_nice.png}
 	\caption{Correlations between the competitive rank and coordinated rank for $\frac{\alpha}{\tau} \in \{1, 10, 25, 50\}$. For low values of $\frac{\alpha}{\tau}$ the weights converge to the identity: the state where peers are fully disconnected. }
 	\label{coordvscomp}
 \end{figure}

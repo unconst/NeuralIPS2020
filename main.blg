@@ -21,45 +21,45 @@ Too many commas in name 1 of "Sanh, Victor; Debut, Lysandre; Chaumond, Julien; W
 while executing---line 2403 of file IEEEtran.bst
 
 Done.
-You've used 16 entries,
+You've used 17 entries,
             4087 wiz_defined-function locations,
-            888 strings with 10129 characters,
-and the built_in function-call counts, 7619 in all, are:
-= -- 522
-> -- 286
-< -- 3
-+ -- 136
-- -- 68
-* -- 337
-:= -- 1230
-add.period$ -- 32
-call.type$ -- 16
-change.case$ -- 16
-chr.to.int$ -- 0
-cite$ -- 16
-duplicate$ -- 637
-empty$ -- 677
-format.name$ -- 82
-if$ -- 1703
+            893 strings with 10431 characters,
+and the built_in function-call counts, 8789 in all, are:
+= -- 604
+> -- 329
+< -- 14
++ -- 160
+- -- 76
+* -- 393
+:= -- 1373
+add.period$ -- 34
+call.type$ -- 17
+change.case$ -- 17
+chr.to.int$ -- 30
+cite$ -- 17
+duplicate$ -- 713
+empty$ -- 773
+format.name$ -- 91
+if$ -- 1985
 int.to.chr$ -- 0
-int.to.str$ -- 16
-missing$ -- 149
-newline$ -- 71
-num.names$ -- 16
-pop$ -- 433
+int.to.str$ -- 17
+missing$ -- 164
+newline$ -- 74
+num.names$ -- 17
+pop$ -- 474
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 2
-skip$ -- 563
+skip$ -- 652
 stack$ -- 0
-substring$ -- 18
-swap$ -- 384
-text.length$ -- 3
+substring$ -- 89
+swap$ -- 451
+text.length$ -- 4
 text.prefix$ -- 0
 top$ -- 5
-type$ -- 16
+type$ -- 17
 warning$ -- 0
-while$ -- 17
-width$ -- 18
-write$ -- 146
+while$ -- 22
+width$ -- 19
+write$ -- 155
 (There were 4 error messages)

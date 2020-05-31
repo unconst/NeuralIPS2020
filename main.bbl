@@ -21,15 +21,15 @@
 \providecommand{\BIBdecl}{\relax}
 \BIBdecl
 
-\bibitem{radford2019language}
-A.~Radford, J.~Wu, R.~Child, D.~Luan, D.~Amodei, and I.~Sutskever, ``Language
-  models are unsupervised multitask learners,'' \emph{OpenAI Blog}, vol.~1,
-  no.~8, p.~9, 2019.
-
 \bibitem{devlin2018bert}
 J.~Devlin, M.-W. Chang, K.~Lee, and K.~Toutanova, ``Bert: Pre-training of deep
   bidirectional transformers for language understanding,'' \emph{arXiv preprint
   arXiv:1810.04805}, 2018.
+
+\bibitem{radford2019language}
+A.~Radford, J.~Wu, R.~Child, D.~Luan, D.~Amodei, and I.~Sutskever, ``Language
+  models are unsupervised multitask learners,'' \emph{OpenAI Blog}, vol.~1,
+  no.~8, p.~9, 2019.
 
 \bibitem{wang2018glue}
 A.~Wang, A.~Singh, J.~Michael, F.~Hill, O.~Levy, and S.~R. Bowman, ``Glue: A
@@ -40,10 +40,11 @@ A.~Wang, A.~Singh, J.~Michael, F.~Hill, O.~Levy, and S.~R. Bowman, ``Glue: A
 F.~Chollet, ``On the measure of intelligence,'' \emph{arXiv preprint
   arXiv:/1911.01547}, 2019.
 
-\bibitem{Riabinin2020learningathome}
-M.~Riabinin and A.~Gusev, ``Learning@home: Crowdsourced training of large
-  neural networks using decentralized mixture-of-experts,'' \emph{arXiv
-  preprint arXiv:/2002.04013}, 2020.
+\bibitem{wang2019superglue}
+A.~Wang, Y.~Pruksachatkun, N.~Nangia, A.~Singh, J.~Michael, F.~Hill, O.~Levy,
+  and S.~Bowman, ``Superglue: A stickier benchmark for general-purpose language
+  understanding systems,'' in \emph{Advances in Neural Information Processing
+  Systems}, 2019, pp. 3261--3275.
 
 \bibitem{hinton2015distilling}
 G.~Hinton, O.~Vinyals, and J.~Dean, ``Distilling the knowledge in a neural
@@ -78,6 +79,11 @@ B.~S and D.~UN, ``Brain-derived neurotrophic factor and its clinical
 N.~Shazeer, A.~Mirhoseini, K.~Maziarz, A.~Davis, Q.~Le, G.~Hinton, and J.~Dean,
   ``Outrageously large neural networks: The sparsely-gated mixture-of-experts
   layer,'' 2017.
+
+\bibitem{Riabinin2020learningathome}
+M.~Riabinin and A.~Gusev, ``Learning@home: Crowdsourced training of large
+  neural networks using decentralized mixture-of-experts,'' \emph{arXiv
+  preprint arXiv:/2002.04013}, 2020.
 
 \bibitem{Sanh2019DistilBERT}
 L.~C. J. W.~T. Sanh, Victor;~Debut, ``Distilbert, a distilled version of bert:
