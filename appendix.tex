@@ -1,0 +1,144 @@
+\section{Appendix}
+
+\subsection{Deriving the idealized ranking.}
+
+We approximate the change in the benchmark $\Delta \mathcal{B}$ at a local minimum under a perturbation $\Delta F (x)_i = [ ..., -f_i(x) , ...]$ reflecting the removal of the $i^{th}$ node.
+\smallskip
+
+\begin{equation}
+\Delta \mathcal{B} = \mathcal{B}(F + \Delta F_i) - \mathcal{B}(F) = \sum_{i}^{n} \mathcal{L}_i(F + \Delta F_i) - \mathcal{L}_i(F)
+\end{equation}
+
+\begin{equation}
+\mathcal{L}_i(F + \Delta F_i) - \mathcal{L}_i(F) \approx \frac{\partial \mathcal{L}_i}{\partial F} * \Delta F_i + \frac{1}{2} \Delta F_i^T * H(\mathcal{L}_i) * \Delta F_i + O(\Delta F_i^3)
+\end{equation}
+
+(17) follows from the definition of the benchmark $\mathcal{B}$ and (18) follows from a Taylor series under the perturbation $\Delta F (x)_i$. Note that the first term $\frac{\partial \mathcal{L}_i}{\partial F}$ is zero at the local minimum and the higher order term $O(\Delta F_i^3)$ can be ignored for sufficiently small perturbations. These assumptions are also made by \cite{lecun1989optimalbraindamage} and \cite{yu2017nisp}. Note that $\mathcal{L}_i$ is an expectation over the dataset $D_i$, and all terms are evaluated at a point $x$ so we have:
+\smallskip
+
+\begin{equation}
+\Delta \mathcal{B} \approx \sum_{i}^{n} \sum_{x \in D_i}  \Delta F_i^T(x) * H(\mathcal{Q}_i(x)) * \Delta F_i(x) 
+\end{equation}
+
+Here the hessian over the error function $H(\mathcal{Q}_i(x))$ and the summation over the dataset $\sum_{x \in D_i}$ have been appropriately substituted. The constant factor $\frac{1}{2}$ can be removed and this leaves our result.
+\smallskip
+
+\subsection{Deriving the weight convergence game.}
+
+\subsection{Theorem}
+
+For choice of Hessians $H(\mathcal{L}(F))$ the network convergence-game can be described with the following linear relationship between gradient terms:
+
+\begin{equation}
+\frac{\partial P}{\partial W} = \frac{\alpha}{\tau} * \frac{\partial L}{\partial W} + \frac{\partial R}{\partial W}
+\end{equation}
+\smallskip
+
+With the gradient of the loss:
+
+\begin{equation}
+\frac{\partial L}{\partial W} = \frac{\partial}{\partial W} [(F_W - F_{W_0})^T * H( \mathcal{L}(F)) * (F_W - F_{W_0})] 
+\end{equation}
+\smallskip
+
+
+\subsection{Setup}
+
+We analyze the system by characterizing the behaviour of participants via their payoff in two terms:
+
+\begin{enumerate}
+	\item The utility attached to that participant’s loss as a function of their weights $U(L(W))$. $U$ is assumed roughly linear for small change in the weight matrix, $U(\mathcal{L}) = \alpha*\mathcal{L}$, and $\frac{\partial U}{\partial \mathcal{L}} = \alpha$.
+	\item The network is converged to a local minimum in the inputs $\frac{\partial\mathcal{L}}{\partial F} = 0$.
+\end{enumerate} (1)  and (2)  From the payoff formulation in 6.3 we write:
+\smallskip
+
+\begin{equation}
+P(W) = \alpha * L(W) + \tau * R(W)
+\end{equation}
+\smallskip
+
+Note, the utility function and emission were measured in similar units and so $\alpha$ is the \textit{price} of each unit change in loss. The analysis just supposes such a score exists, not that it can be computed. Participants are selecting their weights by making gradient steps $\Delta W_i = \frac{\partial P_i}{\partial W_i} = \frac{\partial U_i}{\partial W_i} + \tau * \frac{\partial R_i}{\partial W_i}$ as to maximize their local payoff. For brevity we omit the subscript $i$ for the remainder of the analysis. Consider a Taylor expansion of the loss under a change $\Delta F$ in the inputs.
+
+\begin{equation}
+\mathcal{L}(F + \Delta F) = L(F) + \frac{\partial \mathcal{L}}{\partial F} \Delta F + \frac{1}{2} \Delta F * H( \mathcal{L} (F) ) * \Delta F + O(\Delta F^3) 
+\end{equation}
+
+The first linear term $\frac{\partial L}{\partial F}$ is zero and the higher order terms are removed for sufficiently small perturbations in $F$. We then perform a change of variable $F = F_{W_0}$, and $\Delta F = F_{W_1} - F_{W_0}$ where is $W_0$ are the current set of weights and $W_1$ are another choice such that $F_{W_0}$ and $F_{W_1}$ are those inputs masked by $W_0$ and $W_1$ according to (7). Substituting this into (23):
+
+\begin{equation}
+\mathcal{L}(F_{W_1}) = L(F_{W_0})) + \frac{1}{2} (F_{W_1} - F_{W_0})^T * H( \mathcal{L}(F)) * (F_{W_1} - F_{W_0}) 
+\end{equation}
+
+The function $\mathcal{L}(F_{W_1})$ is simply an approximation of the loss for any choice of weights $W_1$ given that the network has converged under $W_0$. Finally, by the $\alpha$-linear assumption of the utility we can attain the following: 
+
+\begin{equation}
+\frac{\partial U}{\partial W} = \alpha * \frac{\partial L}{\partial W} = \alpha \frac{\partial}{\partial W} [(F_W - F_{W_0})^T * H( \mathcal{L}(F)) * (F_W - F_{W_0}) ]
+\end{equation}
+
+Note that we've dropped the subscript $W_1$,  $L(F_{W_0}))$ is constant not depending on the choice of weights, and the fraction $\frac{1}{2}$ has been removed. The remaining term $\frac{\partial R}{\partial W}$ is derivable via the ranking ranking function in Section~\ref{sec:inter-ranking}.  Finally, dividing both terms by $\tau$ shows the result:
+
+\begin{equation}
+\frac{\partial P}{\partial W} \approx \frac{\alpha}{\tau} * \frac{\partial L}{\partial W} + \frac{\partial R}{\partial W}
+\end{equation}
+
+\begin{equation}
+\frac{\partial L}{\partial W} = \frac{\partial}{\partial W} [(F_W - F_{W_0})^T * H( \mathcal{L}(F)) * (F_W - F_{W_0})] 
+\end{equation}
+\smallskip
+
+
+\subsection{Deriving the ex-post zero-regret step.}
+
+Consider the system described above. A set of $n$ nodes are changing the weights in the ranking matrix $W$ iteratively using gradient descent with learning rate $\lambda$. $W^{t+1} = W^t + \lambda \Delta W$. Here, the change of weights is $\Delta W = [\Delta w_0, ... , \Delta w_n]$ where each $\Delta w_i$ is the weight change pushed by node $i$. Each node is attempting to competitively maximize it's payoff as a function of the weights $P_i(W)$.
+\smallskip
+
+
+\subsubsection{Definition}
+
+The ex-post regret for a single step is the maximum difference in loss between the chosen step $\Delta w_i$ and all alternative $\Delta w_i^*$. The \textit{expected} ex-post regret is this difference in expectation, where the expectation is taken over all choices $\Delta w_j$'s chosen by other participants \cite{dtting2017optimal}.
+\smallskip
+
+
+\begin{equation}
+\textrm{rgt}_i = E_{\Delta w_j} [ \max_{\Delta w_i^*} [P_i(\Delta w_i^*) - P_i(\Delta w_i)] ] 
+\end{equation}
+
+\subsubsection{Theorem}
+
+For sufficiently small $\lambda$, the expected ex-post regret for strategy $\Delta w_i = \frac{\partial P}{\partial w_i}$ is 0.
+\smallskip
+
+\subsubsection{Proof}
+
+Consider Taylor's theorem at the point $W$ for the payoff function $P$ under a change in weights $W^* = W + \lambda \Delta W$. There exists a function $h(W^*)$ such that in the limit as, $W^* \rightarrow W$ we have the exact equivalence:
+\smallskip
+
+\begin{equation}
+P(W^*) = P(W) + \frac{\partial P}{\partial W} (W^* - W) + h(W^*) 
+\end{equation}
+
+Let $P(W_*)$ represent the payoff when the weight change of the $i^{th}$ row is $\Delta W_i = \frac{\partial P}{\partial W_i}$, and let $P(W^*)$ be any other choice. By the definition of regret, and Taylors theorem as $\lambda \rightarrow 0$, we have:
+\smallskip
+
+\begin{equation}
+\textrm{rgt}_i = E_{\Delta W_j} [ \max_{\Delta W_i^*} [\frac{\partial P}{\partial W} (W^* - W) - \frac{\partial P}{\partial W} (W_* - W)] ]
+\end{equation}
+
+This follows by subtracting (29) with choice $W^*$ and $W_*$. Next, substituting $W^* - W = -\lambda \Delta W$ and expanding  $\frac{\partial P}{\partial W} \Delta W = [\frac{\partial P}{\partial W_0} * \Delta W_0, ... \frac{\partial P}{\partial W_n} * \Delta W_n]$ into the equation above leaves:
+\smallskip
+
+\begin{equation}
+\begin{split}
+\frac{\partial P}{\partial W} (W^* - W) - \frac{\partial P}{\partial W} (W_* - W) &= \lambda (\frac{\partial P}{\partial W_i} * \Delta W_i^* - \frac{\partial P}{\partial W_i} * \Delta W_{i*}) + \\ & \lambda \sum_{j \neq i}^{n} (\frac{\partial P}{\partial W_j} * \Delta W_j^* + \frac{\partial P}{\partial W_j} * \Delta W_{j*})
+\end{split}
+\end{equation}
+
+The constant $\lambda$ can be removed and the second term depends only on weights of other rows $W_{j \neq i}$. These can be removed under the expectation $E_{\Delta W_j}$. He have:
+\smallskip
+
+\begin{equation}
+\textrm{rgt}_i = E_{\Delta W_j} [ \max_{\Delta W_i^*} [\frac{\partial P}{\partial W_i} * \Delta W_i^* - \frac{\partial P}{\partial W_i} * \Delta W_{i*}] ]
+\end{equation}
+
+Finally, we use the the fact that for vectors $a$, $b$ and angle between them $\theta$ the magnitude of the dot product is $|a||b|cos \theta$. This is maximized when the vectors are parallel $\theta = 0$ and $cos(\theta) = 1$, or $\Delta W_i = \kappa* \frac{\partial P}{\partial W_i}$ for some constant $\kappa > 0$. Thus $P(\Delta W^*)$ is maximize when $\Delta W_i^* = \kappa * \frac{\partial P}{\partial W_i}$. Since $P(\Delta W^*) = P(\Delta W_*)$ in the maximum, this proves the point.
+\smallskip

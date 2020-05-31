@@ -100,7 +100,7 @@
 \maketitle
 
 \begin{abstract}
-The dominant tools used to guide machine intelligence are benchmarks: datasets of labelled examples which rank systems on a set of predefined tasks. We argue, however, that task based benchmarks are inefficient guides for machine intelligence. Instead, we propose a benchmark which ranks \textit{knowledge production} from within a culture of intelligence systems. In this paper we describe how this benchmark is constructed and how it is negotiated by computers that share knowledge peer-to-peer (P2P) across the internet. Since this internet based negotiation introduces game-theoretic considerations, we design methods to ensure the veracity of the benchmark when peers remain self-interested and trustless. We then test our design by empirically showing that the negotiation closely matches the desired ranking at the system's competitive equilibrium. The result is a benchmark which is directly aligned with knowledge production. It is furthermore, inherently collaborative, open, decentralized, and can consume resources connected by an internet fabric.
+The dominant tools used to guide machine intelligence are typically datasets of labeled examples which rank systems on a set of predefined tasks. However, we argue that task based benchmarks are inefficient guides for machine intelligence. Instead, we propose a benchmark which ranks \textit{knowledge production} from within a network of intelligence systems. In this paper we describe how this benchmark is constructed and how it is negotiated by computers that share knowledge peer-to-peer (P2P) across the internet. Since this internet based negotiation introduces game-theoretic considerations, we design methods to ensure the veracity of the benchmark when peers remain self-interested and trustless. We then test our design by empirically showing that the negotiation closely matches the desired ranking at the system's competitive equilibrium. The result is a benchmark which is directly aligned with knowledge production. Further, it is inherently collaborative, open, decentralized, and can consume knowledge connected by an internet fabric.
 \end{abstract}
 
 Increasingly, state-of-the-art machine learning systems focus on the production of \textit{machine knowledge}, non-task specific understanding of inputs, which can be later tuned to a wide variety of problems \cite{devlin2018bert}. This shift is a consequence of the fact that a focus on tasks during training produces narrow specialists rather than resilient generalists \cite{radford2019language}. In contrast, while becoming the dominant technique for training individual models, the field still opts for task based objectives as the method of reward at the highest level of its evolution \cite{wang2018glue}. The misalignment between this salient feature (machine knowledge) and its feedback mechanism (task performance) is inefficient for the following reasons:
@@ -110,11 +110,11 @@ Increasingly, state-of-the-art machine learning systems focus on the production 
 	
 	\item Representational knowledge can be measured in a much higher dimensional space than the low-dimensional scores produced by the tasks. For instance, the 1024 dimensional floating point embedding produced by BERT in comparison to the 8 dimensional score produced by SuperGLUE. In the low dimensional space, we cannot easily apply divide-and-conquer to the problem to reward niche machine learning systems for working on specific aspects of understanding. This is wasteful as those models may have been costly to create in the first place.
 	
-	\item Because we do not measure how much one team's model improved the collective. Task based benchmarks produce a winner-take-all competition which prunes all but the best. The result is a world-wide challenge where only those with the means and the resources to train the largest models may contribute to the state-of-the-art. 
+	\item We do not measure how much one team's model improved the collective. Task based benchmarks produce a winner-take-all competition which prunes all but the best. The result is a world-wide challenge where only those with the means and the resources to train the largest models may contribute to the state-of-the-art. 
 \end{enumerate}
 
 
-A benchmark that directly measures machine intelligence would be very beneficial.  \footnote{“The iron rule of nature is: you get what you reward for. If you want ants to come, you put sugar on the floor.” - Charlie Munger}. By analogy, similar to rewarding domain specialists or generalists in human cultures, not against their ability to solve tasks, but their ability to improve overall understanding. Our proposal is a framework in which models directly share knowledge that they have learned with each other. Their peers select that knowledge for its ability to improve their own understanding. Crucially, each model's performance is measured by its ability to improve collective understanding of inputs rather than against any specific task. The higher resolution of measurement allows the system to rewarded models for improving small regions of the general problem. Inherently the benchmark introduces knowledge sharing and the demand for performance guides a de-facto 'market for intelligence'.   
+A benchmark that directly measures machine intelligence would be very beneficial.  \footnote{“The iron rule of nature is: you get what you reward for. If you want ants to come, you put sugar on the floor.” - Charlie Munger}. By analogy, similar to rewarding domain specialists or generalists in human cultures, not against their ability to solve tasks, but their ability to improve overall understanding. Our proposal is a framework in which models directly share knowledge that they have learned with each other. Their peers select that knowledge for its ability to improve their own understanding. Crucially, each model's performance is measured by its ability to improve collective understanding of inputs rather than against any specific task. This generalization allows the system to reward models for improving small regions of the general problem. Inherently the benchmark introduces knowledge sharing and the demand for performance guides a de-facto ``market for intelligence".   
 \smallskip
 
 Practically, we design the benchmark to run in a continuous and asynchronous fashion, peer-to-peer (P2P) across the wide network. Since this introduces trustless computation \footnote{ In decentralized systems, trust is shifted from the individuals to the network itself, "trustless" usually means "minimal trust is required" with respect to the protocol} we dedicate a part of this paper to explaining how the system remains fair when little assurance can be given about the computers that compose it. The contributions of this paper are thus four-fold:
@@ -133,7 +133,6 @@ The rest of this paper is organized as follows: Section~\ref{methodology} presen
 \subsection{Benchmark}
 
 The network is composed by $n$ unique parameterized functions $F = {f_0, ...,  f_j, ...f_n}$ where each function is producing an output tensor $f_i(F(x))$, a ``representation" from an input tensor $F(x) = [f_0{(x)} ... f_n{(x)}]$ gathered by querying its neighbors. Each function is training asynchronously over a dataset $D_i=[X,Y]$ such that, given an error function $\mathcal{Q}_i$, its expectation over that data $E_{Di}$ defines a loss $\mathcal{L}_i = E_{Di}[\mathcal{Q}_i( \ y, \ f_i(F(x)) \ )]$. We assume these losses are measured on the same scale and thus our benchmark $\mathcal{B}$ can be defined by their sum:
-\bigskip
 
 \begin{equation}
 \mathcal{B} = \ \sum_{i}^{n} \mathcal{L}_i 
@@ -152,7 +151,6 @@ Each parameterized function is represented here in its most abstract sense\cite{
 \subsection{Ideal Ranking}
 
 Our goal in this work is to produce a ranking $R = [R_i]$ over these functions where the score $R_i \in R$ represents participant $i$'s information-theoretic significance to the benchmark $\mathcal{B}$. Following Le Cun and others \cite{lecun1989optimalbraindamage,yu2017nisp}, it is reasonable to analytically define this significance by equating it with the cost of removing each component from the network:
-\bigskip
 
 \begin{equation}
 R_i \approx \ \ \frac{1}{n} \sum_{j}^{n} \sum_{x \in D_j} \Delta F^T(x)_i * H(\mathcal{Q}_j(x)) * \Delta F(x)_i 
@@ -161,12 +159,10 @@ R_i \approx \ \ \frac{1}{n} \sum_{j}^{n} \sum_{x \in D_j} \Delta F^T(x)_i * H(\m
 \[ \Delta F (x)_i = [0, ... 0, -f_i(x), 0, ... 0] \]
 
 Where the above is derived using a Taylor series (Appendix 6.1) and $\Delta F (x)_i$ is the {\color{blue} perturbation of the $i^{th}$ node's inputs as a function of it's choice of weights when removing function $f_i$ at the point $x$}. Note, the linear and higher order terms of the Taylor series have been removed following \cite{yu2017nisp} and the remaining term $H(\mathcal{Q}_i)$ is the hessian of our error function. When the error function $\mathcal{Q}$ is the twice-differentiable cross-entropy, then $H(\mathcal{Q}_i)$ is the Fisher information matrix, and $R_i \in R$ is measured as relative entropy: reflects each participants informational significance to the network as a whole.
-\bigskip
 
 \subsection{Inter Ranking}
 \label{sec:inter-ranking}
 It is not possible to compute the ranking score above without access to the parameters of each function in the network. Instead, we use a set of inter-model weights $W = [w_{i_j}]$ where each $w_{i,j}$ is the score attributed to $f_j$ from $f_i$ combined into an $n \times n$ square matrix.
-\bigskip
 
 \begin{equation}
 w_{ij} = \ \ \sum_{x \in D_i} \Delta F^T(x)_j * H(\mathcal{Q}_i(x)) * \Delta F(x)_j
@@ -185,19 +181,16 @@ w_{ij} = \ \ \sum_{x \in D_i} \Delta F^T(x)_j * H(\mathcal{Q}_i(x)) * \Delta F(x
 The weights can be computed on the fly either approximately \cite{yu2017nisp} or by using the full hessian of the error. We store them on a distributed ledger and allow participants to update them by making changes of bounded size: $W^{t+1}= W^t + \lambda \Delta W$, where $||W_i||_2 < \epsilon$ at block step $t$. We also enforce that the scores in each row sum to 1, $||w||_1 = 1$. {\color{blue} The reasoning for this enforcement is to ensure stake fairness between early movers and newcomers with innovations that enable them to perform better overall.}
 
 The equivalent ranking $R$ (2) can then be computed by normalizing column sum of the weight matrix:
-\bigskip
 
 \begin{equation}
 R = \frac{1}{n} W^T * \mathbbm{1}
 \end{equation}
 
 The problem is that without system-wide access to the model parameters, the computation of $w_{ij}$ (3) is intractable, {\color{blue} as it would require collecting great amounts of information from potentially billions of neurons}. It is reasonable to assume participants will select weights which artificially increase their own rank rather than others in the network. Moreover, since the network remains open, participants may choose to create many spuriously neighbours and rank themselves higher. The remainder of this paper describes our proposal for resolving these issues.
-\bigskip
 
 \subsection{Stake}
 \label{sec:stake}
 The proposed solution begins by introducing a finite resource $ S=[s_i]$, a component's 'stake' in the system, and an inflation mechanism $\tau$ which translates the ranking vector $R$ into additional stake as incentive. 
-\bigskip
 
 \begin{equation}
 R = \frac{1}{n} W^T \circ S * \mathbbm{1}
@@ -207,7 +200,7 @@ R = \frac{1}{n} W^T \circ S * \mathbbm{1}
 S^{t+1} = S^t + \tau * \frac{R}{||R||_2} 
 \end{equation}
 
-The $\circ$ here is the Hadamard product between the $n \times n$ matrix $W$ and the $n \times n$ matrix containing $S$ in each column, and $t$ is the time-step referred to in Section~\ref{sec:inter-ranking} (measured in distinct blocks on the distributed ledger). By design (5) increases the importance of those with stake, $s_0 * w_{ij}$. This serves two purposes: 
+The $\circ$ represents Hadamard product between the $n \times n$ matrix $W$ and the $n \times n$ matrix containing $S$ in each column, and $t$ is the time-step referred to in Section~\ref{sec:inter-ranking} (measured in distinct blocks on the distributed ledger). By design (5) increases the importance of those with stake, $s_0 * w_{ij}$. This serves two purposes: 
 
 \begin{enumerate}
 	\item New computers can spuriously create new nodes, however this won't game the ranking because the amount of stake they hold is finite.
@@ -215,7 +208,6 @@ The $\circ$ here is the Hadamard product between the $n \times n$ matrix $W$ and
 \end{enumerate}
 
 By providing it to nodes with large rank, this ensures that those with weight must have worked to attain it, or indirectly subsidized those who have done so already. A single staked token would be enough to bootstrap the process. \footnote{The propagation of a resource mocks the flow of the brain-derived neurotrophic factor (BDNF). \cite{Bathina1989neurotrophin}} 
-\smallskip
 
 \begin{algorithm}
 	\caption{Inflation mechanism}
@@ -231,12 +223,10 @@ By providing it to nodes with large rank, this ensures that those with weight mu
 		\ENDWHILE
 	\end{algorithmic}
 \end{algorithm}
-\smallskip
 
 \subsection{Competitive weights}
 \label{sec:competitive_weights}
 While stake provides some protection against malicious actors, it does not ensure weights are set accurately. Our solution begins by introducing competition for connectivity within the network. Nodes that underweight are punished by having inputs from the network masked to zero~(\ref{eq:7}), {\color{blue} which in turn would punish the loss function}. To frame this market we borrow the continuous differential activation function $\sigma$ with range $(0,1)$. Under a choice of weights $W_i$ the inputs to component $i$ are:
-\bigskip
 
 \begin{equation}
 \label{eq:7}
@@ -248,7 +238,6 @@ F_W(x) =  [f_0(x) * \sigma(s_i * w_{i,0} - \mu_0),  ... , f_n(x) * \sigma(s_i * 
 \end{equation}
 
 Here, the shift term $\mu_j$ is the average of the weights in each column $\mu_j = (\frac{1}{n}) \sum_{i}^{n}{s_i * w_{i,j}}$, and the activation function is the temperature scaled sigmoid. Because the allocation mechanism is standard across the network it is possible for each participants to compute both $\frac{\partial \mathcal{L}_i}{\partial W_i}$ and $\frac{\partial R_i}{\partial W_i}$. Computers may augment their usual training framework, for instance, Tensorflow, with the allocation mechanism shown here. 
-\bigskip
 
 \subsection{Running the network}
 
@@ -284,14 +273,12 @@ The layer cuts outward bandwidth, querying only a small subset of peers for each
 \subsection{Extracting knowledge}
 
 Inter-node dependence in the network is broken using distillation\cite{hinton2015distilling}, a compression and knowledge technique in which a smaller model -- the student - mimics the behaviour of an ensemble. We employ this technique over the gating ensemble (10) where the student model learns to minimize the cross-entropy (shown below as KL) between the logits produced by the gating network and its predicted distribution. \cite{Sanh2019DistilBERT}
-\smallskip
 
 \begin{equation}
 \textrm{distillation loss} = \text{KL}_D(\text{dist}(x), G(x)) 
 \end{equation}
 
 We use the distilled model as proxy to cut recursive calling between each components rather than query farther into the network. If models go offline, their peers can use their distilled versions in-place. Private data can be validated over the distilled models instead of querying the network. Eventually, components can fully disconnect from the network using the distilled inputs to validate and inference the models offline.
-\smallskip
 
 \begin{figure}[H]
 	\centering
@@ -316,27 +303,21 @@ The staking system in Section~\ref{sec:stake} gives participants incentive to ma
 \end{enumerate}
 
 Both of these are functions of the weights and, without loss of generality, measured in similar units:
-\bigskip
 
 \begin{equation}
 P_i (W) = U_i(\mathcal{L}_i(W)) + \tau * R(W)_i
 \end{equation}
-\smallskip
 
 It is reasonable to assume payoff maximizing participants will use $P_i$ as their objective during training. This can be computed using standard tools since both terms $U(\mathcal{L}_i(W))$ and $R(W)_i$ are fully continuous and differentiable. The system can be characterized as a competitive gradient descent game where participants are making steps $\Delta W_i = \frac{\partial P_i}{\partial W_i}$. In appendix 6.2 we prove that this strategy is regret-free and achieves the best expected payoff in hindsight. This assumption is also generally employed in smooth markets \cite{balduzzi2020smooth}. The iterative descent thus follows:
-\smallskip
 
 
 \begin{equation}
 W^{t+1} = W^{t} + \lambda \Delta W 
 \end{equation}
-\smallskip
-
 
 \begin{equation}
 \Delta W = [\frac{\partial P_0}{\partial W_0} ; ... ;\frac{\partial P_n}{\partial W_n}]
 \end{equation}
-\smallskip
 
 \subsection{Empirical Model}
 
@@ -348,24 +329,19 @@ Without access to the running network we evaluate our system using an empirical 
 \end{enumerate}  
 
 The first assumption is approximate for small changes of continuous functions and the second assumption is realistic after extended training. In Appendix 6.2 we derive the following gradient step:
-\smallskip
 
 \begin{equation}
 \frac{\partial P}{\partial W} = \frac{\alpha}{\tau} * \frac{\partial L}{\partial W} + \frac{\partial R}{\partial W}
 \end{equation}
-\smallskip
 
 
 \begin{equation}
 \frac{\partial L}{\partial W} = \frac{\partial}{\partial W} [(F_W - F_{W_0})^T * H( \mathcal{L}(F)) * (F_W - F_{W_0})] 
 \end{equation}
-\smallskip
 
 Here $F_W$ is the masked inputs from Section~\ref{sec:competitive_weights}. $(F_W - F_{W_0})$ is the difference in the mask between the choice of weights $W$ and the weights at the minimum $W_0$ and $H( \mathcal{L}(F))$ is the $[n \times n]$ hessian of the loss over inputs $F$. This formulation is both intuitive and useful: the gradient term $\frac{\partial L}{\partial W}$ measures the change in loss for any choice of weights. Additionally, it also allows us to compute the ranking for simulated hessian terms.
-\smallskip
 
 The remainder of the network is deterministic, and can be described by a choice of $\theta = [\alpha, \tau, \lambda, n, \sigma, T, S, W, H]$. For instance, the secondary term, $\frac{\partial R}{\partial W}$ can be computed-directly from Section~\ref{sec:stake} and only depends on the stake vector $S$ and weights $W$.
-\smallskip
 
 \section{Experiments}
 \label{experiments}
@@ -375,7 +351,6 @@ The remainder of the network is deterministic, and can be described by a choice 
 	\caption{Correlations between the competitive rank and coordinated rank for $\frac{\alpha}{\tau} \in \{1, 10, 25, 50\}$. For low values of $\frac{\alpha}{\tau}$ the weights converge to the identity: the state where peers are fully disconnected. }
 	\label{coordvscomp}
 \end{figure}
-\smallskip
 
 \begin{figure}[!htb]
 	\centering
@@ -386,18 +361,14 @@ The remainder of the network is deterministic, and can be described by a choice 
 
 
 To generate sample statistics from the network, we first select $[\alpha, \tau, \lambda, S, \sigma, T, n] \in \theta$, then we generate random positive semi-definite hessians $H$, and random uniform initial weights $W_0$. For each parameterization we discover the competitive ranking by converging the system to a Nash-equilibrium: an equilibrium where no individual can vary from their set of weights and stand to gain. \cite{dtting2017optimal} To find this equilibrium, we use the competitive descent strategy described in (14) and compute the gradient terms from (15). In each trial we use a learning rate $\lambda = 0.005$ and stop when the gradient terms are bounded by $\epsilon$ or the steps exceed $1000 \times n$. The competitive ranking $R^*$ at this point follows from (4) and can be compared to the idealized score in $R$ from (2).
-\smallskip
 
 We are interested in the correlation between $R^*$ and $R$ as we vary the ratio $\alpha$ and $\tau$, this ratio is explicit in (15) where the fraction relates the two gradient terms. Intuitively the ratio is between the value of minimizing the loss and maximizing revenue from inflation. Since this effects the ranking, we show this trade-off for various choices in Figure~\ref{coordvscomp}. 
-\smallskip
 
 Finally, in Figure-\ref{adaptive_tau} we implement an adaptive-$\tau$ strategy where the network varies the inflation rate. Initial inflation is zero and then increases until the weights begins to converge towards the main diagonal $w_{ii}=1$. We measure the sparsity $sparsity = sum(W_{dg})/sum(W)$, the ratio between the main diagonal and the remaining weights. As sparsity increases we push the market equilibrium by decreasing $\tau$. Figure shows this adaptive convergence for $\alpha=1$ with a sparsity target of 1.
-\smallskip
 
 \subsection{Discussion}
 
 Figure~\ref{coordvscomp} shows the relationship between the idealized rank and the competitive rank as a function of $\frac{\alpha}{\tau}$. Figure-\ref{coordvscomp}-a, $\frac{\alpha}{\tau} = 1$ shows the case where this ratio negatively effects the ranking accuracy. Here, all components have set $w_{ii} = 1$ and the resulting scores for all participants has converged to $1/n$. When this occurs, the system could decrease the inflation rate $\tau$ and push the network towards the high information markets seen in Figure-\ref{coordvscomp}-b, c, and d. Figure-\ref{adaptive_tau} shows a basic implementation of this where $\tau$ adapts to the ratio between the row-sums and the main-diagonal. By lowering inflation, it subsequently 'costs less' to connect with peers. Profit maximizing nodes automatically adjust to the change and the system converges back towards an accurate ranking. Those with high ranks will oppose inflation decreased, while those with low ranks will welcome it. The equilibrium found in this meta game will most certainly depend on the number of participants, key to both the ranking accuracy and the market at its core. However, we leave this analysis for a follow up paper. 
-\smallskip
 
 \section{Conclusion}
 \label{conclusion}
@@ -420,150 +391,5 @@ In order to provide a balanced perspective, authors are required to include a st
 \small
 \bibliographystyle{IEEEtran}
 \bibliography{references}        % References
-
-\section{Appendix}
-
-\subsection{Deriving the idealized ranking.}
-
-We approximate the change in the benchmark $\Delta \mathcal{B}$ at a local minimum under a perturbation $\Delta F (x)_i = [ ..., -f_i(x) , ...]$ reflecting the removal of the $i^{th}$ node.
-\smallskip
-
-\begin{equation}
-\Delta \mathcal{B} = \mathcal{B}(F + \Delta F_i) - \mathcal{B}(F) = \sum_{i}^{n} \mathcal{L}_i(F + \Delta F_i) - \mathcal{L}_i(F)
-\end{equation}
-
-\begin{equation}
-\mathcal{L}_i(F + \Delta F_i) - \mathcal{L}_i(F) \approx \frac{\partial \mathcal{L}_i}{\partial F} * \Delta F_i + \frac{1}{2} \Delta F_i^T * H(\mathcal{L}_i) * \Delta F_i + O(\Delta F_i^3)
-\end{equation}
-
-(17) follows from the definition of the benchmark $\mathcal{B}$ and (18) follows from a Taylor series under the perturbation $\Delta F (x)_i$. Note that the first term $\frac{\partial \mathcal{L}_i}{\partial F}$ is zero at the local minimum and the higher order term $O(\Delta F_i^3)$ can be ignored for sufficiently small perturbations. These assumptions are also made by \cite{lecun1989optimalbraindamage} and \cite{yu2017nisp}. Note that $\mathcal{L}_i$ is an expectation over the dataset $D_i$, and all terms are evaluated at a point $x$ so we have:
-\smallskip
-
-\begin{equation}
-\Delta \mathcal{B} \approx \sum_{i}^{n} \sum_{x \in D_i}  \Delta F_i^T(x) * H(\mathcal{Q}_i(x)) * \Delta F_i(x) 
-\end{equation}
-
-Here the hessian over the error function $H(\mathcal{Q}_i(x))$ and the summation over the dataset $\sum_{x \in D_i}$ have been appropriately substituted. The constant factor $\frac{1}{2}$ can be removed and this leaves our result.
-\smallskip
-
-\subsection{Deriving the weight convergence game.}
-
-\subsection{Theorem}
-
-For choice of Hessians $H(\mathcal{L}(F))$ the network convergence-game can be described with the following linear relationship between gradient terms:
-
-\begin{equation}
-\frac{\partial P}{\partial W} = \frac{\alpha}{\tau} * \frac{\partial L}{\partial W} + \frac{\partial R}{\partial W}
-\end{equation}
-\smallskip
-
-With the gradient of the loss:
-
-\begin{equation}
-\frac{\partial L}{\partial W} = \frac{\partial}{\partial W} [(F_W - F_{W_0})^T * H( \mathcal{L}(F)) * (F_W - F_{W_0})] 
-\end{equation}
-\smallskip
-
-
-\subsection{Setup}
-
-We analyze the system by characterizing the behaviour of participants via their payoff in two terms:
-
-\begin{enumerate}
-	\item The utility attached to that participant’s loss as a function of their weights $U(L(W))$. $U$ is assumed roughly linear for small change in the weight matrix, $U(\mathcal{L}) = \alpha*\mathcal{L}$, and $\frac{\partial U}{\partial \mathcal{L}} = \alpha$.
-	\item The network is converged to a local minimum in the inputs $\frac{\partial\mathcal{L}}{\partial F} = 0$.
-\end{enumerate} (1)  and (2)  From the payoff formulation in 6.3 we write:
-\smallskip
-
-\begin{equation}
-P(W) = \alpha * L(W) + \tau * R(W)
-\end{equation}
-\smallskip
-
-Note, the utility function and emission were measured in similar units and so $\alpha$ is the \textit{price} of each unit change in loss. The analysis just supposes such a score exists, not that it can be computed. Participants are selecting their weights by making gradient steps $\Delta W_i = \frac{\partial P_i}{\partial W_i} = \frac{\partial U_i}{\partial W_i} + \tau * \frac{\partial R_i}{\partial W_i}$ as to maximize their local payoff. For brevity we omit the subscript $i$ for the remainder of the analysis. Consider a Taylor expansion of the loss under a change $\Delta F$ in the inputs.
-
-\begin{equation}
-\mathcal{L}(F + \Delta F) = L(F) + \frac{\partial \mathcal{L}}{\partial F} \Delta F + \frac{1}{2} \Delta F * H( \mathcal{L} (F) ) * \Delta F + O(\Delta F^3) 
-\end{equation}
-
-The first linear term $\frac{\partial L}{\partial F}$ is zero and the higher order terms are removed for sufficiently small perturbations in $F$. We then perform a change of variable $F = F_{W_0}$, and $\Delta F = F_{W_1} - F_{W_0}$ where is $W_0$ are the current set of weights and $W_1$ are another choice such that $F_{W_0}$ and $F_{W_1}$ are those inputs masked by $W_0$ and $W_1$ according to (7). Substituting this into (23):
-
-\begin{equation}
-\mathcal{L}(F_{W_1}) = L(F_{W_0})) + \frac{1}{2} (F_{W_1} - F_{W_0})^T * H( \mathcal{L}(F)) * (F_{W_1} - F_{W_0}) 
-\end{equation}
-
-The function $\mathcal{L}(F_{W_1})$ is simply an approximation of the loss for any choice of weights $W_1$ given that the network has converged under $W_0$. Finally, by the $\alpha$-linear assumption of the utility we can attain the following: 
-
-\begin{equation}
-\frac{\partial U}{\partial W} = \alpha * \frac{\partial L}{\partial W} = \alpha \frac{\partial}{\partial W} [(F_W - F_{W_0})^T * H( \mathcal{L}(F)) * (F_W - F_{W_0}) ]
-\end{equation}
-
-Note that we've dropped the subscript $W_1$,  $L(F_{W_0}))$ is constant not depending on the choice of weights, and the fraction $\frac{1}{2}$ has been removed. The remaining term $\frac{\partial R}{\partial W}$ is derivable via the ranking ranking function in Section~\ref{sec:inter-ranking}.  Finally, dividing both terms by $\tau$ shows the result:
-
-\begin{equation}
-\frac{\partial P}{\partial W} \approx \frac{\alpha}{\tau} * \frac{\partial L}{\partial W} + \frac{\partial R}{\partial W}
-\end{equation}
-
-\begin{equation}
-\frac{\partial L}{\partial W} = \frac{\partial}{\partial W} [(F_W - F_{W_0})^T * H( \mathcal{L}(F)) * (F_W - F_{W_0})] 
-\end{equation}
-\smallskip
-
-
-\subsection{Deriving the ex-post zero-regret step.}
-
-Consider the system described above. A set of $n$ nodes are changing the weights in the ranking matrix $W$ iteratively using gradient descent with learning rate $\lambda$. $W^{t+1} = W^t + \lambda \Delta W$. Here, the change of weights is $\Delta W = [\Delta w_0, ... , \Delta w_n]$ where each $\Delta w_i$ is the weight change pushed by node $i$. Each node is attempting to competitively maximize it's payoff as a function of the weights $P_i(W)$.
-\smallskip
-
-
-\subsubsection{Definition}
-
-The ex-post regret for a single step is the maximum difference in loss between the chosen step $\Delta w_i$ and all alternative $\Delta w_i^*$. The \textit{expected} ex-post regret is this difference in expectation, where the expectation is taken over all choices $\Delta w_j$'s chosen by other participants \cite{dtting2017optimal}.
-\smallskip
-
-
-\begin{equation}
-\textrm{rgt}_i = E_{\Delta w_j} [ \max_{\Delta w_i^*} [P_i(\Delta w_i^*) - P_i(\Delta w_i)] ] 
-\end{equation}
-
-\subsubsection{Theorem}
-
-For sufficiently small $\lambda$, the expected ex-post regret for strategy $\Delta w_i = \frac{\partial P}{\partial w_i}$ is 0.
-\smallskip
-
-\subsubsection{Proof}
-
-Consider Taylor's theorem at the point $W$ for the payoff function $P$ under a change in weights $W^* = W + \lambda \Delta W$. There exists a function $h(W^*)$ such that in the limit as, $W^* \rightarrow W$ we have the exact equivalence:
-\smallskip
-
-\begin{equation}
-P(W^*) = P(W) + \frac{\partial P}{\partial W} (W^* - W) + h(W^*) 
-\end{equation}
-
-Let $P(W_*)$ represent the payoff when the weight change of the $i^{th}$ row is $\Delta W_i = \frac{\partial P}{\partial W_i}$, and let $P(W^*)$ be any other choice. By the definition of regret, and Taylors theorem as $\lambda \rightarrow 0$, we have:
-\smallskip
-
-\begin{equation}
-\textrm{rgt}_i = E_{\Delta W_j} [ \max_{\Delta W_i^*} [\frac{\partial P}{\partial W} (W^* - W) - \frac{\partial P}{\partial W} (W_* - W)] ]
-\end{equation}
-
-This follows by subtracting (29) with choice $W^*$ and $W_*$. Next, substituting $W^* - W = -\lambda \Delta W$ and expanding  $\frac{\partial P}{\partial W} \Delta W = [\frac{\partial P}{\partial W_0} * \Delta W_0, ... \frac{\partial P}{\partial W_n} * \Delta W_n]$ into the equation above leaves:
-\smallskip
-
-\begin{equation}
-\begin{split}
-\frac{\partial P}{\partial W} (W^* - W) - \frac{\partial P}{\partial W} (W_* - W) &= \lambda (\frac{\partial P}{\partial W_i} * \Delta W_i^* - \frac{\partial P}{\partial W_i} * \Delta W_{i*}) + \\ & \lambda \sum_{j \neq i}^{n} (\frac{\partial P}{\partial W_j} * \Delta W_j^* + \frac{\partial P}{\partial W_j} * \Delta W_{j*})
-\end{split}
-\end{equation}
-
-The constant $\lambda$ can be removed and the second term depends only on weights of other rows $W_{j \neq i}$. These can be removed under the expectation $E_{\Delta W_j}$. He have:
-\smallskip
-
-\begin{equation}
-\textrm{rgt}_i = E_{\Delta W_j} [ \max_{\Delta W_i^*} [\frac{\partial P}{\partial W_i} * \Delta W_i^* - \frac{\partial P}{\partial W_i} * \Delta W_{i*}] ]
-\end{equation}
-
-Finally, we use the the fact that for vectors $a$, $b$ and angle between them $\theta$ the magnitude of the dot product is $|a||b|cos \theta$. This is maximized when the vectors are parallel $\theta = 0$ and $cos(\theta) = 1$, or $\Delta W_i = \kappa* \frac{\partial P}{\partial W_i}$ for some constant $\kappa > 0$. Thus $P(\Delta W^*)$ is maximize when $\Delta W_i^* = \kappa * \frac{\partial P}{\partial W_i}$. Since $P(\Delta W^*) = P(\Delta W_*)$ in the maximum, this proves the point.
-\smallskip
 
 \end{document}
