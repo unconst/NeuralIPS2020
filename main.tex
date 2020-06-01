@@ -154,6 +154,7 @@ Each parameterized function is represented here in its most abstract sense\cite{
 Our goal in this work is to produce a ranking $R = [R_i]$ over these functions where the score $R_i \in R$ represents participant $i$'s information-theoretic significance to the benchmark $\mathcal{B}$. Following Le Cun and others \cite{lecun1989optimalbraindamage,yu2017nisp}, it is reasonable to analytically define this significance by equating it with the cost of removing each component from the network:
 
 \begin{equation}
+\label{eq:r}
 R_i \approx \ \ \frac{1}{n} \sum_{j}^{n} \sum_{x \in D_j} \Delta F^T(x)_i * H(\mathcal{Q}_j(x)) * \Delta F(x)_i 
 \end{equation}
 
@@ -166,6 +167,7 @@ Where the above is derived using a Taylor series (Appendix 6.1) and $\Delta F (x
 It is not possible to compute the ranking score above without access to the parameters of each function in the network. Instead, we use a set of inter-model weights $W = [w_{i_j}]$ where each $w_{i,j}$ is the score attributed to $f_j$ from $f_i$ combined into an $n \times n$ square matrix.
 
 \begin{equation}
+\label{eq:w}
 w_{ij} = \ \ \sum_{x \in D_i} \Delta F^T(x)_j * H(\mathcal{Q}_i(x)) * \Delta F(x)_j
 \end{equation}
 
@@ -181,19 +183,21 @@ w_{ij} = \ \ \sum_{x \in D_i} \Delta F^T(x)_j * H(\mathcal{Q}_i(x)) * \Delta F(x
 
 The weights can be computed on the fly either approximately \cite{yu2017nisp} or by using the full hessian of the error. We store them on a distributed ledger and allow participants to update them by making changes of bounded size: $W^{t+1}= W^t + \lambda \Delta W$, where $||W_i||_2 < \epsilon$ at block step $t$. We also enforce that the scores in each row sum to 1, $||w||_1 = 1$. {\color{blue} The reasoning for this enforcement is to ensure stake fairness between early movers and newcomers with innovations that enable them to perform better overall.}
 
-The equivalent ranking $R$ (2) can then be computed by normalizing column sum of the weight matrix:
+The equivalent ranking $R$ in Equation ~(\ref{eq:r}) can then be computed by normalizing column sum of the weight matrix:
 
 \begin{equation}
+\label{eq:equiv_ranking}
 R = \frac{1}{n} W^T * \mathbbm{1}
 \end{equation}
 
-The problem is that without system-wide access to the model parameters, the computation of $w_{ij}$ (3) is intractable, {\color{blue} as it would require collecting great amounts of information from potentially billions of neurons}. It is reasonable to assume participants will select weights which artificially increase their own rank rather than others in the network. Moreover, since the network remains open, participants may choose to create many spuriously neighbours and rank themselves higher. The remainder of this paper describes our proposal for resolving these issues.
+The problem is that without system-wide access to the model parameters, the computation of $w_{ij}$ in Equation (\ref{eq:w}) is intractable, {\color{blue} as it would require collecting great amounts of information from potentially billions of neurons}. It is reasonable to assume participants will select weights which artificially increase their own rank rather than others in the network. Moreover, since the network remains open, participants may choose to create many spuriously neighbours and rank themselves higher. The remainder of this paper describes our proposal for resolving these issues.
 
 \subsection{Stake}
 \label{sec:stake}
 The proposed solution begins by introducing a finite resource $ S=[s_i]$, a component's 'stake' in the system, and an inflation mechanism $\tau$ which translates the ranking vector $R$ into additional stake as incentive. 
 
 \begin{equation}
+\label{eq:r_stake}
 R = \frac{1}{n} W^T \circ S * \mathbbm{1}
 \end{equation}
 
@@ -201,7 +205,7 @@ R = \frac{1}{n} W^T \circ S * \mathbbm{1}
 S^{t+1} = S^t + \tau * \frac{R}{||R||_2} 
 \end{equation}
 
-The $\circ$ represents Hadamard product between the $n \times n$ matrix $W$ and the $n \times n$ matrix containing $S$ in each column, and $t$ is the time-step referred to in Section~\ref{sec:inter-ranking} (measured in distinct blocks on the distributed ledger). By design (5) increases the importance of those with stake, $s_0 * w_{ij}$. This serves two purposes: 
+The $\circ$ represents Hadamard product between the $n \times n$ matrix $W$ and the $n \times n$ matrix containing $S$ in each column, and $t$ is the time-step referred to in Section~\ref{sec:inter-ranking} (measured in distinct blocks on the distributed ledger). By design Equation (\ref{eq:r_stake}) increases the importance of those with stake, $s_0 * w_{ij}$. This serves two purposes: 
 
 \begin{enumerate}
 	\item New computers can spuriously create new nodes, however this won't game the ranking because the amount of stake they hold is finite.
@@ -264,6 +268,7 @@ f_i = f_i(G(x)) \ \ \ \  \textrm{ }
 \end{equation}
 
 \begin{equation}
+\label{eq:gating_ensemble}
 G(x) = [ ..., g_j(x) * f_j(x), ...]
 \end{equation}
 
@@ -273,7 +278,7 @@ The layer cuts outward bandwidth, querying only a small subset of peers for each
 
 \subsection{Extracting knowledge}
 
-Inter-node dependence in the network is broken using distillation\cite{hinton2015distilling}, a compression and knowledge technique in which a smaller model -- the student - mimics the behaviour of an ensemble. We employ this technique over the gating ensemble (10) where the student model learns to minimize the cross-entropy (shown below as KL) between the logits produced by the gating network and its predicted distribution. \cite{Sanh2019DistilBERT}
+Inter-node dependence in the network is broken using distillation\cite{hinton2015distilling}, a compression and knowledge technique in which a smaller model -- the student - mimics the behaviour of an ensemble. We employ this technique over the gating ensemble described in Equation (\ref{eq:gating_ensemble}) where the student model learns to minimize the cross-entropy (shown below as KL) between the logits produced by the gating network and its predicted distribution. \cite{Sanh2019DistilBERT}
 
 \begin{equation}
 \textrm{distillation loss} = \text{KL}_D(\text{dist}(x), G(x)) 
@@ -317,6 +322,7 @@ W^{t+1} = W^{t} + \lambda \Delta W
 \end{equation}
 
 \begin{equation}
+\label{eq:grad_step2}
 \Delta W = [\frac{\partial P_0}{\partial W_0} ; ... ;\frac{\partial P_n}{\partial W_n}]
 \end{equation}
 
@@ -332,11 +338,13 @@ Without access to the running network we evaluate our system using an empirical 
 The first assumption is approximate for small changes of continuous functions and the second assumption is realistic after extended training. In Appendix 6.2 we derive the following gradient step:
 
 \begin{equation}
+\label{eq:iterative_descent1}
 \frac{\partial P}{\partial W} = \frac{\alpha}{\tau} * \frac{\partial L}{\partial W} + \frac{\partial R}{\partial W}
 \end{equation}
 
 
 \begin{equation}
+\label{eq:iterative_descent2}
 \frac{\partial L}{\partial W} = \frac{\partial}{\partial W} [(F_W - F_{W_0})^T * H( \mathcal{L}(F)) * (F_W - F_{W_0})] 
 \end{equation}
 
@@ -361,11 +369,17 @@ The remainder of the network is deterministic, and can be described by a choice 
 \end{figure}
 
 
-To generate sample statistics from the network, we first select $[\alpha, \tau, \lambda, S, \sigma, T, n] \in \theta$, then we generate random positive semi-definite hessians $H$, and random uniform initial weights $W_0$. For each parameterization we discover the competitive ranking by converging the system to a Nash-equilibrium: an equilibrium where no individual can vary from their set of weights and stand to gain. \cite{dtting2017optimal} To find this equilibrium, we use the competitive descent strategy described in (14) and compute the gradient terms from (15). In each trial we use a learning rate $\lambda = 0.005$ and stop when the gradient terms are bounded by $\epsilon$ or the steps exceed $1000 \times n$. The competitive ranking $R^*$ at this point follows from (4) and can be compared to the idealized score in $R$ from (2).
+To generate sample statistics from the network, we first select $[\alpha, \tau, \lambda, S, \sigma, T, n] \in \theta$, then we generate random positive semi-definite hessians $H$, and random uniform initial weights $W_0$. For each parameterization we discover the competitive ranking by converging the system to a Nash-equilibrium: an equilibrium where no individual can vary from their set of weights and stand to gain \cite{dtting2017optimal}. To find this equilibrium, we use the competitive descent strategy described in (\ref{eq:iterative_descent2}) and compute the gradient terms from (\ref{eq:grad_step2}). In each trial we use a learning rate $\lambda = 0.005$ and stop when the gradient terms are bounded by $\epsilon$ or the steps exceed $1000 \times n$. The competitive ranking $R^*$ at this point follows from (\ref{eq:equiv_ranking}) and can be compared to the idealized score in $R$ from (\ref{eq:r}).
 
-We are interested in the correlation between $R^*$ and $R$ as we vary the ratio $\alpha$ and $\tau$, this ratio is explicit in (15) where the fraction relates the two gradient terms. Intuitively the ratio is between the value of minimizing the loss and maximizing revenue from inflation. Since this effects the ranking, we show this trade-off for various choices in Figure~\ref{coordvscomp}. 
+We are interested in the correlation between $R^*$ and $R$ as we vary the ratio $\alpha$ and $\tau$, this ratio is explicit in (\ref{eq:iterative_descent1}) where the fraction relates the two gradient terms. Intuitively the ratio is between the value of minimizing the loss and maximizing revenue from inflation. Since this effects the ranking, we show this trade-off for various choices in Figure~\ref{coordvscomp}. 
 
-Finally, in Figure-\ref{adaptive_tau} we implement an adaptive-$\tau$ strategy where the network varies the inflation rate. Initial inflation is zero and then increases until the weights begins to converge towards the main diagonal $w_{ii}=1$. We measure the sparsity $sparsity = sum(W_{dg})/sum(W)$, the ratio between the main diagonal and the remaining weights. As sparsity increases we push the market equilibrium by decreasing $\tau$. Figure shows this adaptive convergence for $\alpha=1$ with a sparsity target of 1.
+Finally, in Figure-\ref{adaptive_tau} we implement an adaptive-$\tau$ strategy where the network varies the inflation rate. Initial inflation is zero and then increases until the weights begins to converge towards the main diagonal $w_{ii}=1$. We measure the sparsity 
+
+\begin{equation}
+sparsity = \frac{\sum W_{dg}}{\sum W}
+\end{equation}
+
+as the ratio between the main diagonal and the remaining weights. As sparsity increases we push the market equilibrium by decreasing $\tau$. Figure~\ref{adaptive_tau} shows this adaptive convergence for $\alpha=1$ with a sparsity target of 1.
 
 \subsection{Discussion}
 
