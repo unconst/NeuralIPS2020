@@ -191,7 +191,7 @@ The immediate problem with this form of ranking is that without system-wide acce
 
 \subsection{Stake}
 \label{sec:stake}
-The proposed solution begins by introducing a finite resource $ S=[s_i]$, a component's 'stake' in the system, and an inflation mechanism $\tau$ which translates the ranking vector $R$ into additional stake as incentive. 
+The proposed solution begins by introducing a finite resource $ S=[s_i]$, a component's 'stake' in the system, and a mechanism which translates the ranking vector $R$ into additional stake as incentive. 
 
 \begin{equation}
 \label{eq:r_stake}
@@ -206,10 +206,8 @@ The $\circ$ represents Hadamard product between the $n \times n$ matrix $W$ and 
 
 \begin{enumerate}
 	\item New computers can spuriously create new nodes, however this won't game the ranking because the amount of stake they hold is finite.
-	\item The resource provides mechanism power.
+	\item The resource provides mechanism power. By providing it to nodes with large rank, this ensures that those with weight must have worked to attain it, or indirectly subsidized those who have done so already. A single staked token would be enough to bootstrap the process. \footnote{The propagation of a resource mocks the flow of the brain-derived neurotrophic factor (BDNF). \cite{Bathina1989neurotrophin}} 
 \end{enumerate}
-
-By providing it to nodes with large rank, this ensures that those with weight must have worked to attain it, or indirectly subsidized those who have done so already. A single staked token would be enough to bootstrap the process. \footnote{The propagation of a resource mocks the flow of the brain-derived neurotrophic factor (BDNF). \cite{Bathina1989neurotrophin}} 
 
 \begin{algorithm}
 	\caption{Inflation mechanism}
@@ -228,7 +226,7 @@ By providing it to nodes with large rank, this ensures that those with weight mu
 
 \subsection{Competitive weights}
 \label{sec:competitive_weights}
-While stake provides some protection against malicious actors, it does not ensure weights are set accurately. Our solution begins by introducing competition for connectivity within the network. Nodes that underweight are punished by having inputs from the network masked to zero~(\ref{eq:7}), {\color{blue} which in turn would punish the loss function}. To frame this market we borrow the continuous differential activation function $\sigma$ with range $(0,1)$. Under a choice of weights $W_i$ the inputs to component $i$ are:
+While stake provides some protection against malicious actors, it does not ensure weights are set accurately. Our solution begins by introducing competition for connectivity within the network. Nodes that underweight are punished by having inputs from the network masked to zero~(\ref{eq:7}), which woud in turn punish the loss function. To frame this market we borrow the continuous differential activation function $\sigma$ with range $(0,1)$. Under a choice of weights $W_i$ the inputs to component $i$ are:
 
 \begin{equation}
 \label{eq:7}
@@ -251,7 +249,7 @@ The steps to run a network participant are:
 	\item Responses $F(x)$ from the network produce a loss-gradient $\frac{\partial \mathcal{L}}{\partial F}$ which back-propagates through $f_i$ and out to the network.
 	\item  During 2 and 3 the participant competitively selects the weights for their row $w_{ij} \in W$.
 	\item  Participants submit changes to the weights $\Delta W_i$ which, in-turn changes the ranking and induces inflation $\tau * R$.
-	\item  {\color{blue} After steps 1-5 have been performed multiple times}, participants disconnect and verify the model in a normal manner.
+	\item  After steps 1-5 have been performed multiple times, participants disconnect and verify the model in a normal manner.
 \end{enumerate}
 
 Peers only communicate with computers that hold stake as a consequence of section~\ref{sec:competitive_weights}. Those that fail to produce value will be pruned naturally as participants learn to differentiate signal from noise.
@@ -270,7 +268,7 @@ G(x) = [ ..., g_j(x) * f_j(x), ...]
 \end{equation}
 
 
-The layer cuts outward bandwidth, querying only a small subset of peers for each example. The gating function is trainable w.r.t to the loss and its weights act as a proxy for importance $w_{ij} \in W$. This method has been shown to drastically increase the potential for outward bandwidth in datacenter training,\cite{shazeer2017outrageously} and has been investigated in a peer-to-peer (P2P) setting as well \cite{Riabinin2020learningathome}
+The layer cuts outward bandwidth, querying only a small subset of peers for each example. The gating function is trainable w.r.t to the loss and its weights act as a proxy for importance $w_{ij} \in W$. This method has been shown to drastically increase the potential for outward bandwidth in datacenter training,\cite{shazeer2017outrageously} and has been investigated in a peer-to-peer setting as well \cite{Riabinin2020learningathome}
 
 
 \subsection{Extracting knowledge}
