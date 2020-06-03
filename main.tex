@@ -115,9 +115,9 @@ Increasingly, state-of-the-art machine learning systems focus on the production 
 	\item Models trained on tasks produce knowledge which is fine tuned to the  specific task and therefore not appropriate for sharing with models solving other tasks. In contrast, machine knowledge can -- and increasingly is \cite{Sanh2019DistilBERT} -- shared between research teams to avoid repeated work. A focus on rewarding tasks performance only indirectly rewards this shareable knowledge production -- for instance, via attribution in the paper describing the training method -- rather than directly in the benchmark. This tenuous form of attribution means teams are not well incentivized to produce and share this salient element. Instead they are pitted against each other and centralized towards those groups capable of expending the incredible resources it takes to train a benchmark beating model.
 \end{enumerate}
 
-What is needed is benchmark that directly measures machine knowledge production \footnote{“The iron rule of nature is: you get what you reward for. If you want ants to come, you put sugar on the floor.” - Charlie Munger}. Our proposal for achieving this is a framework in which models directly share knowledge that they have learned with each other and have peers select that knowledge for its ability to improve their own understanding. Crucially, we circumvent issue (1) peers may opt for a self-supervised objective against which they rank their peers. This allows the benchmarks to reward multi-task understanding implicitly. In reference to point (2) peers value each other directly against their learned distributions. Consequently, the benchmark can reward peers for introducing niche understanding of inputs. Finally, in reference to (3), knowledge sharing is inherent, introducing direct attribution towards models which add collective understanding. 
+What is needed is benchmark that directly measures machine knowledge production \footnote{“The iron rule of nature is: you get what you reward for. If you want ants to come, you put sugar on the floor.” - Charlie Munger}. Our proposal for achieving this is a framework in which models directly share knowledge that they have learned with each other and have peers select that knowledge for its ability to improve their own understanding. Crucially, we circumvent issue (1) peers may opt for a self-supervised objective against which they rank their peers. This allows the benchmarks to reward multi-task understanding explicitly. In reference to point (2) peers value each other directly against their learned distributions. The expanded resolution allows the benchmark to reward peers for niche improvements in understanding. Finally, in reference to (3), knowledge sharing is inherent, introducing direct attribution towards models which add collective understanding. 
 
-Practically, we design the benchmark to run in a continuous and asynchronous fashion, peer-to-peer (P2P) across the Internet. Since this introduces trustless computation \footnote{ In decentralized systems, trust is shifted from the individuals to the network itself, "trustless" usually means "minimal trust is required" with respect to the protocol} we dedicate a part of this paper to explaining how the system remains fair when little assurance can be given about the computers that compose it. In summary, the contributions of this paper are thus four-fold:
+Practically, we design the benchmark to run in a continuous and asynchronous fashion, peer-to-peer (P2P) across the Internet. This is required since p2p interaction is the most direct. It subsequently removes the need for a centralized arbiter. However,  since this introduces trustless computation \footnote{ In decentralized systems, trust is shifted from the individuals to the network itself, "trustless" usually means "minimal trust is required" with respect to the protocol} we dedicate a part of this paper to explaining how the system remains fair when little assurance can be given about the computers that compose it. In summary, the contributions of this paper are thus four-fold:
 \begin{enumerate}
 	\item We introduce a P2P based intelligence framework.
 	\item We introduce a benchmark that rewards models that improve representational knowledge within a network.
@@ -132,7 +132,7 @@ The rest of this paper is organized as follows: Section~\ref{methodology} presen
 
 \subsection{Benchmark}
 
-The network is composed by $n$ unique parameterized functions $F = {f_0, ...,  f_j, ...f_n}$ where each function is producing an output tensor $f_i(F(x))$, a ``representation" from an input tensor $F(x) = [f_0{(x)} ... f_n{(x)}]$ gathered by querying its neighbors. Each function is training asynchronously over a dataset $D_i=[X,Y]$ such that, given an error function $\mathcal{Q}_i$, its expectation over that data $E_{Di}$ defines a loss $\mathcal{L}_i = E_{Di}[\mathcal{Q}_i( \ y, \ f_i(F(x)) \ )]$. We assume these losses are measured on the same scale and thus our benchmark $\mathcal{B}$ can be defined by their sum:
+The p2p network is composed by $n$ unique parameterized functions $F = {f_0, ...,  f_j, ...f_n}$ where each function is producing an output tensor $f_i(F(x))$, a ``representation" from an input tensor $F(x) = [f_0{(x)} ... f_n{(x)}]$ gathered by querying its neighbors. Each function is training asynchronously over a dataset $D_i=[X,Y]$ such that, given an error function $\mathcal{Q}_i$, its expectation over that data $E_{Di}$ defines a loss $\mathcal{L}_i = E_{Di}[\mathcal{Q}_i( \ y, \ f_i(F(x)) \ )]$. We assume these losses are measured on the same scale and thus our benchmark $\mathcal{B}$ can be defined by their sum:
 
 \begin{equation}
 \mathcal{B} = \ \sum_{i}^{n} \mathcal{L}_i 
@@ -146,11 +146,11 @@ The network is composed by $n$ unique parameterized functions $F = {f_0, ...,  f
 	\caption{$n=6$ parameterized functions with losses $\mathcal{L}_i$ and datasets $D_i$.}
 \end{figure}{}
 
-Each parameterized function is represented here in its most abstract sense\cite{hinton2015distilling} and need only accept the same input type $x$ and produce the same output dimension to fit within the network. {\color{blue} For instance, unicode encoded string $x = "hello"$ and its semantic representation as a $64x49$ word embedding.} This widened scope ensures participants can be multi-task \cite{kaiser2017model}, use completely distinct computing substrates \cite{alex2014cortical} or train on unique datasets. \cite{lample2019crosslingual}. 
+Each parameterized function is represented here abstractly as function \cite{hinton2015distilling} and need only accept the same input type $x$ and produce the same output dimension to fit within the network. For instance, input may be a unicode encoded string $x = "hello"$ and output its semantic representation as a $1024$ dimensional word embedding. This widened scope ensures participants can be multi-task \cite{kaiser2017model}, use completely distinct computing substrates \cite{alex2014cortical} or train on unique datasets. \cite{lample2019crosslingual}. 
 
 \subsection{Ideal Ranking}
 
-Our goal in this work is to produce a ranking $R = [R_i]$ over these functions where the score $R_i \in R$ represents participant $i$'s information-theoretic significance to the benchmark $\mathcal{B}$. Following Le Cun and others \cite{lecun1989optimalbraindamage,yu2017nisp}, it is reasonable to analytically define this significance by equating it with the cost of removing each component from the network:
+Our goal in this work is to produce a ranking $R = [R_i]$ over these functions where the score $R_i \in R$ represents participant $i$'s information-theoretic significance to the benchmark $\mathcal{B}$. Following Le Cun and others \cite{lecun1989optimalbraindamage,yu2017nisp}, it is reasonable to define this significance by equating it with the cost of removing each component from the network. We derive this analytically as follows:
 
 \begin{equation}
 \label{eq:r}
@@ -159,11 +159,11 @@ R_i \approx \ \ \frac{1}{n} \sum_{j}^{n} \sum_{x \in D_j} \Delta F^T(x)_i * H(\m
 
 \[ \Delta F (x)_i = [0, ... 0, -f_i(x), 0, ... 0] \]
 
-Where the above is derived using a Taylor series (Appendix 6.1) and $\Delta F (x)_i$ is the {\color{blue} perturbation of the $i^{th}$ node's inputs as a function of it's choice of weights when removing function $f_i$ at the point $x$}. Note, the linear and higher order terms of the Taylor series have been removed following \cite{yu2017nisp} and the remaining term $H(\mathcal{Q}_i)$ is the hessian of our error function. When the error function $\mathcal{Q}$ is the twice-differentiable cross-entropy, then $H(\mathcal{Q}_i)$ is the Fisher information matrix, and $R_i \in R$ is measured as relative entropy: reflects each participants informational significance to the network as a whole.
+ This can be derived via Taylor series where $\Delta F (x)_i$ is the perturbation of the $j^{th}$ node's inputs when the $i^{th}$ node is removed from the network (Appendix 6.1). The remaining term $H(\mathcal{Q}_j)$ is the hessian of the $j^{th}$ node's error function \cite{yu2017nisp}. When the error function $\mathcal{Q}_j$ is the twice-differentiable cross-entropy then $H(\mathcal{Q}_j)$ is it's Fishers information matrix. In this form, $R_i \in R$ is suitably measured as relative entropy reflecting each participants \textit{informational significance} to the network as a whole.
 
 \subsection{Inter Ranking}
 \label{sec:inter-ranking}
-It is not possible to compute the ranking score above without access to the parameters of each function in the network. Instead, we use a set of inter-model weights $W = [w_{i_j}]$ where each $w_{i,j}$ is the score attributed to $f_j$ from $f_i$ combined into an $n \times n$ square matrix.
+It is not possible to compute the ranking score above without access to the parameters of each function in the network. This is unreasonable in our peer to peer setting. So instead, we use an $n \times n$ matrix $W = [w_{i,j}]$ where each $w_{i,j}$ is the score attributed to the $j^{th}$ node from the $i^{th}$. 
 
 \begin{equation}
 \label{eq:w}
@@ -175,21 +175,19 @@ w_{ij} = \ \ \sum_{x \in D_i} \Delta F^T(x)_j * H(\mathcal{Q}_i(x)) * \Delta F(x
 	\hspace*{-2cm}
 	\input{Weights.tex}
 	%    \label{fig:progdense_diagram}
-	\caption{Inter-model contribution weights: $w_{i,j}$ the score attributed to $f_j$ from $f_i$}
+	\caption{Inter-node contribution weights: $w_{i,j}$ the score attributed to $f_j$ from $f_i$}
 \end{figure}{}
 
-%{\color{blue} -- e.g. by using a heuristic to propagate the weights from the final layer of $f_i$ through to the first layer of $f_j$ --}  
-
-The weights can be computed on the fly either approximately \cite{yu2017nisp} or by using the full hessian of the error. We store them on a distributed ledger and allow participants to update them by making changes of bounded size: $W^{t+1}= W^t + \lambda \Delta W$, where $||W_i||_2 < \epsilon$ at block step $t$. We also enforce that the scores in each row sum to 1, $||w||_1 = 1$. {\color{blue} The reasoning for this enforcement is to ensure stake fairness between early movers and newcomers with innovations that enable them to perform better overall.}
-
-The equivalent ranking $R$ in Equation ~(\ref{eq:r}) can then be computed by normalizing column sum of the weight matrix:
+The equivalent ranking $R$ in Equation ~(\ref{eq:r}) can then be computed by taking the column sum of the weight matrix like so:
 
 \begin{equation}
 \label{eq:equiv_ranking}
 R = \frac{1}{n} W^T * \mathbbm{1}
 \end{equation}
 
-The problem is that without system-wide access to the model parameters, the computation of $w_{ij}$ in Equation (\ref{eq:w}) is intractable, {\color{blue} as it would require collecting great amounts of information from potentially billions of neurons}. It is reasonable to assume participants will select weights which artificially increase their own rank rather than others in the network. Moreover, since the network remains open, participants may choose to create many spuriously neighbours and rank themselves higher. The remainder of this paper describes our proposal for resolving these issues.
+The weights can be computed on the fly either approximately -- e.g. by using a heuristic to propagate a contribution score from the error function through to the input \cite{yu2017nisp} -- or by using the full hessian of the error as described in Equation ~(\ref{eq:r}). We then store these weights and compute the ranking using a distributed ledger. Participants can then make updates to this ledger by submitting changes of bounded size: $W^{t+1}= W^t + \lambda \Delta W$. The ledger enforces the learning rate $||W_i||_2 < \epsilon$, and that rows remain suitably normalized $||w||_1 = 1$ at each block step $t$.  
+
+The immediate problem with this form of ranking is that without system-wide access to the model parameters, the computation of $w_{ij}$ in Equation (\ref{eq:w}) is non-auditable: testing the truthfullness of the weights would require access to the weights of each model. It is reasonable to assume participants will select weights which artificially increase their own rank rather than others in the network. Moreover, since the network remains open, participants may choose to create many spuriously neighbours and rank themselves higher. The remainder of this paper describes our proposal for resolving these issues.
 
 \subsection{Stake}
 \label{sec:stake}
