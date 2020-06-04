@@ -100,7 +100,7 @@
 \maketitle
 
 \begin{abstract}
-The dominant tools used to guide machine intelligence are typically benchmarks which rank systems on a set of predefined tasks. However, task performance is a narrowly defined, low-resolution, and non-collaborative measure making it an inefficient guide for machine intelligence. Instead, we propose a benchmark that measures \textit{knowledge production} from within a network of intelligence systems. In this paper we describe how this benchmark is constructed and how it is negotiated by computers that share what they learn peer-to-peer (P2P) across the internet. Since this internet based negotiation introduces game-theoretic considerations, we design methods to improve the benchmark's accuracy when peers remain self-interested and trustless. We then test our design by empirically showing that the negotiation closely matches the desired ranking at the system's competitive equilibrium. 
+The dominant tools used to guide machine intelligence are typically benchmarks which rank systems on a set of predefined tasks. However, task performance is a narrowly defined, low-resolution, and non-collaborative measure making it an inefficient guide for machine intelligence. Instead, we propose a benchmark that measures \textit{knowledge production} from within a network of intelligence systems. In this paper we describe how this benchmark is constructed and how it is negotiated by computers that share what they learn peer-to-peer (P2P) across the internet. Since this internet based negotiation introduces game-theoretic considerations, we design methods to improve the benchmark's accuracy when peers remain self-interested and trust is diminished. We then test our design by empirically showing that the negotiation closely matches the desired ranking at the system's competitive equilibrium. 
 
 %The result is a benchmark that is inherently collaborative, efficient, and decentralized.
 \end{abstract}
@@ -115,9 +115,9 @@ Increasingly, state-of-the-art machine learning systems focus on the production 
 	\item Models trained on tasks produce knowledge which is fine tuned to the  specific task and therefore not appropriate for sharing with models solving other tasks. In contrast, machine knowledge can -- and increasingly is \cite{Sanh2019DistilBERT} -- shared between research teams to avoid repeated work. A focus on rewarding tasks performance only indirectly rewards this shareable knowledge -- for instance, via attribution in a paper describing the training method -- rather than directly in the benchmark. This tenuous form of attribution means teams are not well incentivized to produce and share this salient element. Instead they are pitted against each other and centralized towards those groups capable of expending the incredible resources it takes to train a benchmark beating model.
 \end{enumerate}
 
-What is needed is benchmark that directly measures machine knowledge production \footnote{“The iron rule of nature is: you get what you reward for. If you want ants to come, you put sugar on the floor.” - Charlie Munger}. Our proposal for achieving this is a framework in which models directly share knowledge that they have learned with each other and have peers select that knowledge for its ability to improve their own understanding. Crucially, we circumvent issue (1) peers may opt for a self-supervised objective against which they rank their peers. This allows the benchmarks to reward multi-task understanding explicitly. In reference to point (2) peers value each other directly against their learned distributions. The expanded resolution allows the benchmark to reward peers for niche improvements in understanding. Finally, in reference to (3), knowledge sharing is inherent, introducing direct attribution towards models which add collective understanding. 
+What is needed is benchmark that directly measures machine knowledge production \footnote{“The iron rule of nature is: you get what you reward for. If you want ants to come, you put sugar on the floor.” - Charlie Munger}. Our proposal for achieving this is a framework in which models directly share knowledge that they have learned with each other, having their peers rank that knowledge for its ability to improve their own understanding. Crucially, peers may rank their neighbors directly against task-agnostic objectives, for instance unsupervised language modelling, this allows the benchmarks to reward multi-task understanding explicitly and use cheap unlabelled datasets. Furthermore, value against these objectives can be measured directly by combining the distributions from many models. The expanded resolution allows the benchmark to reward peers for niche improvements in understanding. And finally, because knowledge sharing is inherent to the benchmark it allows direct attribution towards models which improve collective understanding. 
 
-Practically, we design the benchmark to run in a continuous and asynchronous fashion, peer-to-peer (P2P) across the Internet. This is required since p2p interaction is the most direct. It subsequently removes the need for a centralized arbiter. However,  since this introduces trustless computation \footnote{ In decentralized systems, trust is shifted from the individuals to the network itself, "trustless" usually means "minimal trust is required" with respect to the protocol} we dedicate a part of this paper to explaining how the system remains fair when little assurance can be given about the computers that compose it. In summary, the contributions of this paper are thus four-fold:
+Practically, we design the benchmark to run in a continuous and asynchronous fashion, peer-to-peer (P2P) across the Internet. P2p interaction is the most direct and subsequently removes the need for a centralized arbiter. However,  since this introduces trustless computation \footnote{ In decentralized systems, trust is shifted from the individuals to the network itself, "trustless" usually means "minimal trust is required" with respect to the protocol} we dedicate a part of this paper to explaining how the system remains fair when little assurance can be given about the computers that compose it. In summary, the contributions of this paper are thus four-fold:
 \begin{enumerate}
 	\item We introduce a P2P based intelligence framework.
 	\item We introduce a benchmark that rewards models that improve representational knowledge within a network.
@@ -125,14 +125,13 @@ Practically, we design the benchmark to run in a continuous and asynchronous fas
 	\item We show how a self-interested desire to minimize a loss function can be used to guide the network towards a fair ranking.
 \end{enumerate}
 
-The rest of this paper is organized as follows: Section~\ref{methodology} presents the intelligence benchmark and ranking mechanism that models use to evaluate each other. Section~\ref{analysis} proposes a method to detect and respond to the scenario where participants are not honestly reporting the significance of their peers. Section ~\ref{experiments} highlights the experiments performed to verify the function of this framework. Finally, Section~\ref{conclusion} presents a summary and future works on this system.
+The rest of this paper is organized as follows: Section~\ref{methodology} presents the intelligence benchmark and ranking mechanism that models use to evaluate each other. Section~\ref{sec:market} describes the methods we use to detect and respond to the scenario where participants are not honestly reporting the significance of their peers. Section~\ref{analysis} describes the empirical model we use to test the network's incentive structure and Section ~\ref{experiments} highlights the experiments performed to verify the function this framework. Finally, Section~\ref{conclusion} presents a summary and future works on this system.
 
 \section{Methodology}
 \label{methodology}
-
 \subsection{Benchmark}
 
-The p2p network is composed by $n$ unique parameterized functions $F = {f_0, ...,  f_j, ...f_n}$ where each function is producing an output tensor $f_i(F(x))$, a ``representation" from an input tensor $F(x) = [f_0{(x)} ... f_n{(x)}]$ gathered by querying its neighbors. Each function is training asynchronously over a dataset $D_i=[X,Y]$ such that, given an error function $\mathcal{Q}_i$, its expectation over that data $E_{Di}$ defines a loss $\mathcal{L}_i = E_{Di}[\mathcal{Q}_i( \ y, \ f_i(F(x)) \ )]$. We assume these losses are measured on the same scale and thus our benchmark $\mathcal{B}$ can be defined by their sum:
+The p2p network is composed of $n$ unique parameterized functions $F = {f_0, ...,  f_j, ...f_n}$ where each function is produces an output tensor $f_i(F(x))$, a ``representation" from an input tensor $F(x) = [f_0{(x)} ... f_n{(x)}]$ gathered by querying its neighbors. Each function trains asynchronously over a dataset $D_i=[X,Y]$ such that, given an error function $\mathcal{Q}_i$, its expectation over that data $E_{Di}$ defines a loss $\mathcal{L}_i = E_{Di}[\mathcal{Q}_i( \ y, \ f_i(F(x)) \ )]$. We assume these losses are measured on the same scale and thus our benchmark $\mathcal{B}$ can be defined by their sum:
 
 \begin{equation}
 \mathcal{B} = \ \sum_{i}^{n} \mathcal{L}_i 
@@ -146,7 +145,7 @@ The p2p network is composed by $n$ unique parameterized functions $F = {f_0, ...
 	\caption{$n=6$ parameterized functions with losses $\mathcal{L}_i$ and datasets $D_i$.}
 \end{figure}{}
 
-Each parameterized function is represented here abstractly as function \cite{hinton2015distilling} and need only accept the same input type $x$ and produce the same output dimension to fit within the network. For instance, input may be a unicode encoded string $x = "hello"$ and output its semantic representation as a $1024$ dimensional word embedding. This widened scope ensures participants can be multi-task \cite{kaiser2017model}, use completely distinct computing substrates \cite{alex2014cortical} or train on unique datasets. \cite{lample2019crosslingual}. 
+Each parameterized function is represented here abstractly as function \cite{hinton2015distilling} and need only accept the same input type $x$ and produce the same output dimension to fit within the network. For instance, input may be a unicode encoded string $x = \text{"hello"}$ and output its semantic representation as a $1024$ dimensional word embedding. This widened scope ensures participants can be multi-task \cite{kaiser2017model}, use completely distinct computing substrates \cite{alex2014cortical} or train on unique datasets. \cite{lample2019crosslingual}. 
 
 \subsection{Ideal Ranking}
 
@@ -159,11 +158,11 @@ R_i \approx \ \ \frac{1}{n} \sum_{j}^{n} \sum_{x \in D_j} \Delta F^T(x)_i * H(\m
 
 \[ \Delta F (x)_i = [0, ... 0, -f_i(x), 0, ... 0] \]
 
- This can be derived via Taylor series where $\Delta F (x)_i$ is the perturbation of the $j^{th}$ node's inputs when the $i^{th}$ node is removed from the network (Appendix 6.1). The remaining term $H(\mathcal{Q}_j)$ is the hessian of the $j^{th}$ node's error function \cite{yu2017nisp}. When the error function $\mathcal{Q}_j$ is the twice-differentiable cross-entropy then $H(\mathcal{Q}_j)$ is it's Fishers information matrix. In this form, $R_i \in R$ is suitably measured as relative entropy reflecting each participants \textit{informational significance} to the network as a whole.
+ This can be derived via Taylor series where $\Delta F (x)_i$ is the perturbation of the $j^{th}$ node's inputs when the $i^{th}$ node is removed from the network at the point $(x)$ (Appendix 6.1). The remaining term $H(\mathcal{Q}_j)$ is the hessian of the $j^{th}$ node's error function \cite{yu2017nisp}. When the error function $\mathcal{Q}_j$ is the twice-differentiable cross-entropy then $H(\mathcal{Q}_j)$ is it's Fishers information matrix. In this form, $R_i \in R$ is suitably measured as relative entropy reflecting each participants \textit{informational significance} to the network as a whole.
 
 \subsection{Inter Ranking}
 \label{sec:inter-ranking}
-It is not possible to compute the ranking score above without access to the parameters of each function in the network. This is unreasonable in our peer to peer setting. So instead, we use an $n \times n$ matrix $W = [w_{i,j}]$ where each $w_{i,j}$ is the score attributed to the $j^{th}$ node from the $i^{th}$. 
+It is not possible to compute the ranking score above without access to the parameters of each function in the network. Instead we use an $n \times n$ matrix $W = [w_{i,j}]$ where each $w_{i,j}$ is the score attributed to the $j^{th}$ node from the $i^{th}$. 
 
 \begin{equation}
 \label{eq:w}
@@ -185,34 +184,28 @@ The equivalent ranking $R$ in Equation ~(\ref{eq:r}) can then be computed by tak
 R = \frac{1}{n} W^T * \mathbbm{1}
 \end{equation}
 
-The weights can be computed on the fly either approximately -- e.g. by using a heuristic to propagate a contribution score from the error function through to the input \cite{yu2017nisp} -- or by using the full hessian of the error as described in Equation ~(\ref{eq:r}). We then store these weights and compute the ranking using a distributed ledger. Participants can then make updates to this ledger by submitting changes of bounded size: $W^{t+1}= W^t + \lambda \Delta W$. The ledger enforces the learning rate $||W_i||_2 < \epsilon$, and that rows remain suitably normalized $||w||_1 = 1$ at each block step $t$.  
+The weights can be computed on the fly either approximately -- e.g. by using a heuristic to propagate a contribution score from the error function through to the input \cite{yu2017nisp} -- or by using the full hessian of the error as described in Equation ~(\ref{eq:r}). In practice we store these weights and compute the ranking on a distributed ledger as i. Participants can then make updates to this ledger by submitting changes of bounded size: $W^{t+1}= W^t + \lambda \Delta W$. The ledger enforces the learning rate $||W_i||_2 < \epsilon$, and that rows remain suitably normalized $||w||_1 = 1$ at each block step $t$.  
 
-The immediate problem with this form of ranking is that without system-wide access to the model parameters, the computation of $w_{ij}$ in Equation (\ref{eq:w}) is non-auditable: testing the truthfullness of the weights would require access to the weights of each model. It is reasonable to assume participants will select weights which artificially increase their own rank rather than others in the network. Moreover, since the network remains open, participants may choose to create many spuriously neighbours and rank themselves higher. The remainder of this paper describes our proposal for resolving these issues.
+\section{Market}
+\label{sec:market}
+
+The immediate problem with the ranking described above is that without system-wide access to the model parameters, the computation of $w_{ij}$ in Equation (\ref{eq:w}) is non-auditable: testing the truthfullness of the weights would require access to the parameters of each model, information we do not have on the distributed ledger. It is reasonable to assume participants will select weights which artificially increase their own rank rather than others in the network -- therefore undermining the validity of the benchmark. The primary suggestion in this paper however, is that we can attain an accurate ranking even when self-interested behaviour is assumed and the weights are non-auditable.  
 
 \subsection{Stake}
 \label{sec:stake}
-The proposed solution begins by introducing a finite resource $ S=[s_i]$, a component's 'stake' in the system, and a mechanism which translates the ranking vector $R$ into additional stake as incentive. 
-
-\begin{equation}
-\label{eq:r_stake}
-R = \frac{1}{n} W^T \circ S * \mathbbm{1}
-\end{equation}
-
-\begin{equation}
-S^{t+1} = S^t + \tau * \frac{R}{||R||_2} 
-\end{equation}
-
-The $\circ$ represents Hadamard product between the $n \times n$ matrix $W$ and the $n \times n$ matrix containing $S$ in each column, and $t$ is the time-step referred to in Section~\ref{sec:inter-ranking} (measured in distinct blocks on the distributed ledger). By design Equation (\ref{eq:r_stake}) increases the importance of those with stake, $s_0 * w_{ij}$. This serves two purposes: 
+Our proposal is to frame the benchmark as a market by introducing a finite resource $ S=[s_i]$, a component's 'stake' in the system, which gives them more weight to rank others. Simultaneously the mechanism translates the ranking vector $R$ into additional stake as incentive, providing inflation to those with the highest scores. The 'tokenization' of power in the benchmark and its inflation mechanism serves the following purposes: 
 
 \begin{enumerate}
-	\item New computers can spuriously create new nodes, however this won't game the ranking because the amount of stake they hold is finite.
-	\item The resource provides mechanism power. By providing it to nodes with large rank, this ensures that those with weight must have worked to attain it, or indirectly subsidized those who have done so already. A single staked token would be enough to bootstrap the process. \footnote{The propagation of a resource mocks the flow of the brain-derived neurotrophic factor (BDNF). \cite{Bathina1989neurotrophin}} 
+    \item By controlling the distribution of power within the network the mechanism can guide the system with reward signals towards the fair ranking. \footnote{The propagation of a value holding resource mimics the flow of the brain-derived neurotrophic factor (BDNF) in the brain \cite{Bathina1989neurotrophin}.} 
+	\item Payment in the form of mechanism power 'stake' to those with large rank ensures that those with weight must have worked to attain it, or indirectly subsidized those who have done so already. 
+    \item While computers can spuriously create new nodes in the network they cannot spuriously create mechanism power since this remains finite in the system.
 \end{enumerate}
+
+Our practical implementation of the stake mechanism is described in Algorithm 1.  
 
 \begin{algorithm}
 	\caption{Inflation mechanism}
 	\begin{algorithmic} 
-		
 		\REQUIRE $S = \ [n \times 1] \ \textrm{Stake Vector}$
 		\REQUIRE $W = \ [n \times n] \ \textrm{Weight Matrix}$
 		\REQUIRE $\tau > 0 \ \textrm{inflation rate}$
@@ -224,9 +217,12 @@ The $\circ$ represents Hadamard product between the $n \times n$ matrix $W$ and 
 	\end{algorithmic}
 \end{algorithm}
 
-\subsection{Competitive weights}
+While stake provides some protection against malicious actors, it does not ensure weights are set accurately. Indeed, it may even provide further incentive for those computers to increase their own weight (or their friends) at the expense of others. 
+
+\subsection{Competition}
 \label{sec:competitive_weights}
-While stake provides some protection against malicious actors, it does not ensure weights are set accurately. Our solution begins by introducing competition for connectivity within the network. Nodes that underweight are punished by having inputs from the network masked to zero~(\ref{eq:7}), which woud in turn punish the loss function. To frame this market we borrow the continuous differential activation function $\sigma$ with range $(0,1)$. Under a choice of weights $W_i$ the inputs to component $i$ are:
+
+Our solution begins by introducing competition for connectivity within the network. Nodes that underweight are punished by having inputs from the network masked to zero~(\ref{eq:7}), which would in turn punish the loss function. To frame this market we borrow the continuous differential activation function $\sigma$ with range $(0,1)$. Under a choice of weights $W_i$ the inputs to component $i$ are:
 
 \begin{equation}
 \label{eq:7}
@@ -254,40 +250,40 @@ The steps to run a network participant are:
 
 Peers only communicate with computers that hold stake as a consequence of section~\ref{sec:competitive_weights}. Those that fail to produce value will be pruned naturally as participants learn to differentiate signal from noise.
 
-\subsection{Conditional computation}
+% \subsection{Conditional computation}
 
-As the network grows, outward bandwidth will become the major bottleneck. Components learn to trim outward bandwidth by employing a Sparsely-Gated Mixture-of-Experts (SGMoE) \cite{shazeer2017outrageously} layer at the input. The gating layer determines a sparse combination of children to query for each example and then re-joins them using the the gating weights $g_j(x)$. The combined gated inputs are fed as input to the local function: 
+% As the network grows, outward bandwidth will become the major bottleneck. Components learn to trim outward bandwidth by employing a Sparsely-Gated Mixture-of-Experts (SGMoE) \cite{shazeer2017outrageously} layer at the input. The gating layer determines a sparse combination of children to query for each example and then re-joins them using the the gating weights $g_j(x)$. The combined gated inputs are fed as input to the local function: 
 
-\begin{equation}
-f_i = f_i(G(x)) \ \ \ \  \textrm{ }
-\end{equation}
+% \begin{equation}
+% f_i = f_i(G(x)) \ \ \ \  \textrm{ }
+% \end{equation}
 
-\begin{equation}
-\label{eq:gating_ensemble}
-G(x) = [ ..., g_j(x) * f_j(x), ...]
-\end{equation}
-
-
-The layer cuts outward bandwidth, querying only a small subset of peers for each example. The gating function is trainable w.r.t to the loss and its weights act as a proxy for importance $w_{ij} \in W$. This method has been shown to drastically increase the potential for outward bandwidth in datacenter training,\cite{shazeer2017outrageously} and has been investigated in a peer-to-peer setting as well \cite{Riabinin2020learningathome}
+% \begin{equation}
+% \label{eq:gating_ensemble}
+% G(x) = [ ..., g_j(x) * f_j(x), ...]
+% \end{equation}
 
 
-\subsection{Extracting knowledge}
+% The layer cuts outward bandwidth, querying only a small subset of peers for each example. The gating function is trainable w.r.t to the loss and its weights act as a proxy for importance $w_{ij} \in W$. This method has been shown to drastically increase the potential for outward bandwidth in datacenter training,\cite{shazeer2017outrageously} and has been investigated in a peer-to-peer setting as well \cite{Riabinin2020learningathome}
 
-Inter-node dependence in the network is broken using distillation\cite{hinton2015distilling}, a compression and knowledge technique in which a smaller model -- the student - mimics the behaviour of an ensemble. We employ this technique over the gating ensemble described in Equation (\ref{eq:gating_ensemble}) where the student model learns to minimize the cross-entropy (shown below as KL) between the logits produced by the gating network and its predicted distribution. \cite{Sanh2019DistilBERT}
 
-\begin{equation}
-\textrm{distillation loss} = \text{KL}_D(\text{dist}(x), G(x)) 
-\end{equation}
+% \subsection{Extracting knowledge}
 
-We use the distilled model as proxy to cut recursive calling between each components rather than query farther into the network. If models go offline, their peers can use their distilled versions in-place. Private data can be validated over the distilled models instead of querying the network. Eventually, components can fully disconnect from the network using the distilled inputs to validate and inference the models offline.
+% Inter-node dependence in the network is broken using distillation\cite{hinton2015distilling}, a compression and knowledge technique in which a smaller model -- the student - mimics the behaviour of an ensemble. We employ this technique over the gating ensemble described in Equation (\ref{eq:gating_ensemble}) where the student model learns to minimize the cross-entropy (shown below as KL) between the logits produced by the gating network and its predicted distribution. \cite{Sanh2019DistilBERT}
 
-\begin{figure}[H]
-	\centering
-	\hspace*{0cm}
-	\input{distillation.tex}
-	%    \label{fig:progdense_diagram}
-	\caption{Queries propagate to depth=1 before the distilled model is used.}
-\end{figure}{}
+% \begin{equation}
+% \textrm{distillation loss} = \text{KL}_D(\text{dist}(x), G(x)) 
+% \end{equation}
+
+% We use the distilled model as proxy to cut recursive calling between each components rather than query farther into the network. If models go offline, their peers can use their distilled versions in-place. Private data can be validated over the distilled models instead of querying the network. Eventually, components can fully disconnect from the network using the distilled inputs to validate and inference the models offline.
+
+% \begin{figure}[H]
+% 	\centering
+% 	\hspace*{0cm}
+% 	\input{distillation.tex}
+% 	%    \label{fig:progdense_diagram}
+% 	\caption{Queries propagate to depth=1 before the distilled model is used.}
+% \end{figure}{}
 
 \section{Analysis}
 \label{analysis}
@@ -371,7 +367,7 @@ We are interested in the correlation between $R^*$ and $R$ as we vary the ratio 
 Finally, in Figure-\ref{adaptive_tau} we implement an adaptive-$\tau$ strategy where the network varies the inflation rate. Initial inflation is zero and then increases until the weights begins to converge towards the main diagonal $w_{ii}=1$. We measure the sparsity by: 
 
 \begin{equation}
-sparsity = \frac{\sum W_{dg}}{\sum W}
+\text{sparsity} = \frac{\sum W_{dg}}{\sum W}
 \end{equation}
 
 as the ratio between the main diagonal and the remaining weights. As sparsity increases we push the market equilibrium by decreasing $\tau$. Figure~\ref{adaptive_tau} shows this adaptive convergence for $\alpha=1$ with a sparsity target of 1. 
@@ -394,9 +390,42 @@ We have proposed a machine intelligence benchmark that can run in a P2P setting 
 %	\item $W_0$: A initial weight matrix $ [n \times n]$
 %	\item $H( \mathcal{L}(F))_i$: For each $f_i$, the hessian of the loss $L_i$ over inputs $F(x)$ $ n \times [n \times n]$
 %\end{itemize}
+\newpage
 
 \section{Broader Impact}
-In order to provide a balanced perspective, authors are required to include a statement of the potential broader impact of their work, including its ethical aspects and future societal consequences. Authors should take care to discuss both positive and negative outcomes.
+
+From its early conception as a field \cite{turing1950Machinery} up until recently \cite{chollet2019measure} much attention has been given to the measure of intelligence as its definition and a goal for the field, considerably less attention has been given to its incentivization: the manner in which intelligence production is rewarded, what survives through time, what holds our attention long enough to be iterated on, which of its creators receive academic positions, jobs, and monetary rewards. 
+
+These two facets are related -- often we simply reward that which performs the best -- but they are distinctly not the same thing. We know from novelty search \cite{lehman2011Novelty} and exploration in reinforcement learning, for instance, that on occasion it is useful to reward work completely unaligned with the objective. Indeed, even with good measures, bad incentives will ensure the field never achieves them.   
+
+This paper critiques the incentivization structure at the heart of machine intelligence which drives engineers to train models which perform SOTA on task-based benchmarks. We argue that a focus on task based benchmarking as the key incentive mechanism is unsuitable for the efficient realization of strong general artificial intelligence. Our argument rests on three points: (1) That benchmarks are ineffective proxies for general intelligence, (2) that they are low resolution measurement techniques which prune useful work (3) and that they produces a competition which is inherently non-collaborative. 
+
+We attempt to solve these issues by designing a new method of incentivizing intelligence production directly in an online p2p network. While the impact of this design remains untested -- i.e. we cannot know how the system will behave in the wild without having it first exist -- we conjecture the following points about the broader impact of the system should it ever see the light of day. 
+
+First, the benhmark in this paper propses changing the nature of intelligence benchmarks so that that they can directly measure \textit{machine knowledge} without explicitly looking to tasks. This reframing could drastically increase the number of tasks and datasets concurrently being used to guide machine intelligence at the highest level of its evolution. Measurement over feature distributions would change the resolution of benchmarks increasing their ability to differentialy reward multiple models. And finally, incentivize the production of a task agnostic product (machine knowledge) which is inherently shareable.  
+
+Second, we design our benchmark to run across many collaborating peers over the internet. Resources from many teams could be joined and this may drastically the effect the scale of resulting intelligence system. Smaller teams would have the ability to contribute such a system without the needed compute. We know from other distributed peer to peer systems like BitTorrent, that there is incredible amounts of computing resource latent and useable on the internet which could be tapped by such a system.
+
+Third, a peer to peer intelligence system would make the resultant product in the system accessible and open. This may help reduce waste in machine intelligence as those systems already trained could be used by others. At the same time, an open-systems would make these resources reachable by many more people than currently have access. Will open access to AI give power to bad actors? Yes, but centralizing power of intelligence in the hand of the few  may be equally if not more dangerous.
+
+Finally, we have intergrated modern digital ledger technology into the design of the incentive structure. Finite resources in this capacity have been shown to have value carrying qualities close in nature to moneies. If so, the proposed benchmark pays those that improve it. This could provide a suitable avenue for researchers to directly survive off their intelligence production without needing corporate middlemen. This may level the playing the field and bring ai-home to the research organizations from which it first arose. A market for intelligence could stimulate its production in the same way economies in other arenas have. For instance, the economy for hashing power in the case of Bitcoin has increased the scale of that system far beyond the computing power of large corporations or nation states. However, in the same breath that markets are mentioned, we should be careful and admit that markets can be simultaneously treacherous and ineffective in some contexts. These are some of the major concerns that our paper investigates, in fact this is the crux of our work. 
+
+
+
+
+k
+\begin{enumerate}
+    \item Thwork e benchmark is more aligned with general intelligence, as it is more efficient and more inherently collaborative. 
+    \item The introduction of the peer-to-peer based intelligence benchmark creates a new "intelligence economy" in which the best performing models are rewarded to make intelligence.
+    \item This also has the potential to allow companies to "purchase intelligence" from researchers, creating a supply-and-demand based economy, one where individuals can be directly rewarded for their work.
+    \item The incentive directly rewards the creation of intelligence.  
+   
+    \item The propagation of knowledge across the network is sped up due to the rewarding mechanism. 
+    \item Academically speaking, the protocol also has the potential to resolve the reproducibility problem as researchers will be able to simply place their work on the network and report their contributions in accordance with the benchmark performance. 
+\end{enumerate}
+ 
+\newpage
+
 
 \small
 \bibliographystyle{IEEEtran}
